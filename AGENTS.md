@@ -1,8 +1,8 @@
 # Console Mode: notes for coding agents
 
 Console Mode is a Windows desktop app (WinUI 3, .NET 8, C#) that turns a PC into a
-console: it focuses the TV, hides the other displays, launches Big Picture / Playnite /
-Xbox mode, and restores the desk setup afterwards.
+console: it focuses the TV, hides the other displays, launches Playnite or your own
+app, and restores the desk setup afterwards.
 
 ## What you can and cannot verify
 

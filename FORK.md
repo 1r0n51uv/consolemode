@@ -28,6 +28,7 @@ earlier 1.7.2 release was deleted.
 | Per-game profiles | `Services/GameProfiles.cs`, `ConsoleEngine.GameProfiles.cs`, `MainViewModel.GameProfiles.cs` |
 | Local control API and `consolemode://` links | `Services/ControlPipeService.cs`, `ControlProtocol.cs`, `ProtocolService.cs` |
 | DDC/CI panel power-off | `NativeDisplays.SetPower`, `MonitorService.DisableDdc`, the "turn off the panel" hide strategy |
+| Steam Big Picture and Xbox mode launchers, Steam-to-tray and Playnite folder settings, the "More apps" tab | `LaunchService` (Big Picture / Xbox parts), `SteamSession.cs`, `SteamShutdown.cs`, `MainViewModel.OtherApps.cs` (ControlFS logo kept) |
 | Languages es-ES, de-DE, fr-FR, ru-RU | `Resources/Strings.<code>.json`, their READMEs and guides, installer entries |
 
 ## Rewritten (upstream changes here need the idea redone in our style)

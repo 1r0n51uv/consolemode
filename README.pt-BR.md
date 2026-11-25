@@ -22,13 +22,13 @@ Está na 1.6? O app oferece a atualização e mantém suas configurações. Pref
 
 Quer testar o que vem aí antes de todo mundo? Ligue Sistema → App → "Receber versões de teste (beta)".
 
-Windows 10 ou 11, com [Steam](https://store.steampowered.com/) (Big Picture), [Playnite](https://playnite.link/) ou o app Xbox.
+Windows 10 ou 11, com o [Playnite](https://playnite.link/) ou um aplicativo seu.
 
 ## Como funciona
 
 1. Abra o app e escolha a tela onde você joga. As outras desligam.
 2. Clique em **Jogar agora**, ou use o atalho de 1 clique na Área de Trabalho. Na primeira vez numa tela nova, a TV pergunta "Está vendo esta tela?" e desfaz tudo sozinha se ninguém responder.
-3. Saia do Big Picture ou do Playnite e tudo volta: telas, áudio, resolução.
+3. Saia do Playnite (ou do seu app) e tudo volta: telas, áudio, resolução.
 
 Prefere o sofá? Com o app na bandeja, segure o seu atalho do controle e ele começa dali.
 
@@ -46,7 +46,7 @@ Os atalhos do controle são você quem escolhe: nenhum vem ligado, o tour da pri
 - **Resolução e Hz** por tela, **HDR**, e **VRR** enquanto você joga
 - O áudio vai para a TV (ou qualquer saída) e volta depois
 - Oculta os **ícones da área de trabalho** durante a sessão se você ativar a opção e restaura a visibilidade anterior ao voltar ao PC
-- Abre **Steam Big Picture**, **Playnite em tela cheia** ou o **Modo Xbox**, e manda a Steam para a bandeja ao voltar ao PC
+- Abre o **Playnite em tela cheia** ou um aplicativo seu
 - **Menu da sessão** sobre o jogo: troque ou feche as janelas abertas, mude volume, resolução, áudio e HDR, esconda o cursor do mouse ou mova-o com o controle e navegue pelos seus arquivos com o [ControlFS](https://github.com/nextestudios/ControlFS) e pela web com o [JoyChromium](https://github.com/lippdev/joychromium)
 - Uma interface no estilo dos consoles, feita para a TV, que também funciona com mouse e teclado (tela cheia, controles Xbox e PlayStation, abas no LB/RB, um papel de parede próprio ou as capas da sua Steam como plano de fundo), com um tour guiado na primeira vez que você abre
 - **Seus aplicativos** como iniciadores: qualquer `.exe` (RetroArch, outro launcher…) vira um bloco no Início

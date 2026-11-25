@@ -4,6 +4,11 @@ Notas em português do Brasil; a versão em inglês (Estados Unidos) fica em `CH
 
 ## [Unreleased]
 
+## [1.7.1.2]
+### Mudanças
+- Removidos os iniciadores Steam Big Picture e Modo Xbox: ficam o Playnite e os seus aplicativos, e o Playnite é o padrão.
+- Menos ajustes: sem a pasta do Playnite, sem "Mandar a Steam para a bandeja", sem a aba "Mais apps do desenvolvedor" e uma categoria Controle mais simples (somem Task View, acordar o PC, toque curto e menu da sessão fora do modo console).
+
 ## [1.7.1.1]
 ### Novidades
 - Idioma italiano: o app e o instalador agora estão disponíveis em italiano.
