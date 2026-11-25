@@ -176,7 +176,6 @@ public partial class MainViewModel
             case "menuoutside": MenuOutsideSession = !MenuOutsideSession; break;
             case "updates": CheckUpdates = !CheckUpdates; break;
             case "betas": BetaUpdates = !BetaUpdates; break;
-            case "closest": CloseSteamOnRestore = !CloseSteamOnRestore; break;
             case "desktopicons": RestoreDesktopIcons = !RestoreDesktopIcons; break;
             case "hidedesktopicons": HideDesktopIcons = !HideDesktopIcons; break;
             case "parkpointer": ParkPointer = !ParkPointer; break;

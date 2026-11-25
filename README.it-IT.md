@@ -19,13 +19,13 @@ Scarica l'ultima versione stabile dalla **[pagina delle release](https://github.
 
 Vuoi provare per primo ciò che sta per arrivare? Attiva Sistema → App → "Ricevi le versioni di prova (beta)".
 
-Windows 10 o 11, più [Steam](https://store.steampowered.com/) (Big Picture), [Playnite](https://playnite.link/) o l'app Xbox.
+Windows 10 o 11, più [Playnite](https://playnite.link/) o un'app tua.
 
 ## Come funziona
 
 1. Apri l'app e scegli lo schermo su cui giochi. Gli altri si spengono.
 2. Premi **Gioca ora**, oppure usa il collegamento con un clic sul desktop. La prima volta su uno schermo nuovo, la TV chiede "Riesci a vedere questa schermata?" e, se nessuno risponde, tutto torna indietro da solo.
-3. Esci da Big Picture o da Playnite e ogni cosa torna al suo posto: schermi, audio e risoluzione.
+3. Esci da Playnite (o dalla tua app) e ogni cosa torna al suo posto: schermi, audio e risoluzione.
 
 Preferisci il divano? Con l'app nell'area di notifica, tieni premuta la scorciatoia del controller e parti da lì.
 
@@ -43,7 +43,7 @@ Le scorciatoie del controller le scegli tu: all'inizio non ce n'è nessuna attiv
 - **Risoluzione e frequenza di aggiornamento** per schermo, **HDR**, e **VRR** mentre giochi
 - L'audio va alla TV (o a qualsiasi uscita) e poi torna com'era
 - Nasconde le **icone del desktop** durante la sessione, se attivi l'opzione, e ripristina la visibilità precedente quando torni al PC
-- Apre **Steam Big Picture**, **Playnite a schermo intero** o la **modalità Xbox**, e manda Steam nell'area di notifica quando torni al PC
+- Apre **Playnite a schermo intero** o un'app tua
 - **Menu della sessione** sopra il gioco: cambia o chiudi le finestre aperte, regola volume, risoluzione, audio e HDR, nascondi il puntatore del mouse o muovilo con il controller, ed esplora i tuoi file con [ControlFS](https://github.com/nextestudios/ControlFS) e il web con [JoyChromium](https://github.com/lippdev/joychromium)
 - Un'interfaccia in stile console, pensata per la TV, che funziona anche con mouse e tastiera (schermo intero, controller Xbox e PlayStation, schede con LB/RB, uno sfondo tuo o le copertine di Steam come sfondo), con un giro guidato la prima volta che la apri
 - Inglese, portoghese, spagnolo, tedesco, francese, italiano e russo

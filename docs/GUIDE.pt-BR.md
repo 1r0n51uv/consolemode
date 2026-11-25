@@ -8,9 +8,7 @@ Detalhes que não cabem no [README](../README.pt-BR.md).
 
 | Modo | Ao sair |
 |------|---------|
-| **Steam Big Picture** | Restauração automática (app na bandeja) |
 | **Playnite tela cheia** | Restauração automática (app na bandeja) |
-| **Modo Xbox** | Manual — *Restaurar agora*, menu da bandeja ou reabrir a janela |
 | **Aplicativo personalizado** | Restauração automática quando o app (ou o processo escolhido para acompanhar) fecha |
 
 Se o app fechar ou o PC desligar no meio de uma sessão, na próxima vez que o Console Mode abrir (também ao entrar no Windows, se ele inicia com o Windows) ele restaura tudo o que a sessão mudou: telas, áudio, ícones da área de trabalho e o ponteiro, e avisa.
@@ -31,7 +29,7 @@ O **atalho da visão de tarefas** faz pelo controle o que o Win + Tab faz: abre 
 
 O Console Mode tem uma interface só, feita como a de um console: ocupa a tela toda e funciona com controle Xbox ou PlayStation, mouse ou teclado (clique numa aba ou use Page Up / Page Down; Enter e Esc fazem o papel de A e B). Na primeira vez que você abre, um tour guiado passa pelas abas, pelos iniciadores, pelo botão de jogar, pelas telas, pelos ajustes rápidos e pelos atalhos do controle; cada parada avança sozinha depois do tempo de ler (a barra embaixo do cartão mostra quanto falta), **A** avança na hora e **B** pula. Para ver de novo: **Sistema → App → Tutorial**. Enquanto carrega, o app mostra uma abertura com o logo e um som de entrada; qualquer botão pula, de vez em quando, de surpresa, vem uma inspirada no Xbox 360 ou no PS4, com o som do console; **Sistema → App** escolhe um estilo (o que acaba com as surpresas), mostra a abertura na hora e desliga a abertura ou só o som.
 
-O **Início** mostra os seus iniciadores numa fileira no topo (Steam Big Picture, Playnite, modo Xbox): **A** num deles escolhe o que abre, e **Jogar agora** logo abaixo começa. O bloco **+** no fim adiciona um aplicativo seu; num deles, **☰** (OPTIONS no PlayStation) ou o botão direito do mouse abre o menu dele, com **Remover da Início**. A linha embaixo do nome diz onde você vai jogar e o que muda (áudio, resolução, FPS, HDR, VRR); o botão redondo ao lado de Jogar agora abre a **Sessão**, com as telas e os ajustes rápidos.
+O **Início** mostra os seus iniciadores numa fileira no topo (Playnite): **A** num deles escolhe o que abre, e **Jogar agora** logo abaixo começa. O bloco **+** no fim adiciona um aplicativo seu; num deles, **☰** (OPTIONS no PlayStation) ou o botão direito do mouse abre o menu dele, com **Remover da Início**. A linha embaixo do nome diz onde você vai jogar e o que muda (áudio, resolução, FPS, HDR, VRR); o botão redondo ao lado de Jogar agora abre a **Sessão**, com as telas e os ajustes rápidos.
 
 A aba **Sistema** lista as categorias à esquerda (Tela de jogo, Ao entrar no modo console, Controle, TV, Extras opcionais, App, Atalho, ajuda e dados, Outros apps do desenvolvedor). Passar por uma categoria mostra as opções dela à direita; **A** ou a direita entra nelas, e **B** ou a esquerda volta para as categorias.
 
@@ -41,7 +39,6 @@ A aba **Sistema** reúne todos os ajustes, incluindo os atalhos do controle, Pla
 
 Abra a ação de atalho que deseja configurar, escolha **Definir** ou **Alterar**, segure a combinação desejada em um único controle e solte os botões. **Remover** desativa aquele atalho. Durante a captura, os botões não navegam pela interface; use **Cancelar** ou **Esc** para interrompê-la. Fora da captura, **B** volta do editor. Campos de endereço e FPS personalizado aceitam digitação por teclado.
 
-Ao voltar do Big Picture, **Mandar a Steam para a bandeja ao voltar ao PC** fecha a janela do cliente e mantém a Steam em execução. Com a opção desligada, o cliente desktop fica aberto. As janelas da Steam são preservadas quando há jogo rodando ou não é possível verificar esse estado.
 
 Trocar a tela principal pode fazer o Windows embaralhar os ícones da área de trabalho. **Devolver os ícones da área de trabalho ao lugar** (ligado por padrão) salva a posição deles antes da sessão e os coloca de volta depois que a mesa é restaurada. Não faz nada quando **Organizar ícones automaticamente** está ligado na área de trabalho, porque aí o próprio Windows os arruma. **Esconder os ícones da área de trabalho na sessão** (desligado por padrão) some com eles enquanto a sessão roda, para o visual limpo de console, e os mostra de novo ao voltar ao PC; ícones que já estavam escondidos continuam assim, e uma sessão interrompida os mostra de novo na próxima abertura.
 
@@ -63,7 +60,6 @@ O Console Mode pode alterar a opção de VRR do Windows. Para melhor resultado, 
 ## Limitações
 
 - Layouts multi-monitor variam; em alguns setups a restauração pode precisar de uma nova tentativa pela bandeja
-- O Modo Xbox não detecta o fim do fullscreen — restaure manualmente
 - O build WinUI 3 precisa ser compilado no Windows (`net8.0-windows`)
 
 ## Solução de problemas

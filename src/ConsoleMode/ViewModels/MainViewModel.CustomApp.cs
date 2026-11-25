@@ -34,7 +34,7 @@ public partial class MainViewModel
     /// <summary>The selected launcher as the summaries show it: a custom app by its own name.</summary>
     private string LaunchSummaryText => IsCustomApp
         ? CustomAppName
-        : SelectedLaunch?.Text ?? LocalizationService.Get("LaunchSteam");
+        : SelectedLaunch?.Text ?? "";
 
     /// <summary>The config's custom apps (an older config's one app becomes the first) and the one in use.</summary>
     private void LoadCustomApps(AppConfig config)
@@ -122,7 +122,7 @@ public partial class MainViewModel
         if (await PickExeAsync() is { } path) CustomAppPath = path;
     }
 
-    /// <summary>System → Remove this app: its tile goes, and Steam Big Picture opens instead.</summary>
+    /// <summary>System → Remove this app: its tile goes, and the first launcher left opens instead.</summary>
     [RelayCommand]
     private void RemoveCustomApp()
     {
@@ -131,7 +131,7 @@ public partial class MainViewModel
 
     /// <summary>
     /// Takes an app off Home (System, or its tile's menu). The launcher that opens stays, unless it was this app: then
-    /// Steam Big Picture opens instead. System goes on showing another of the apps, if any is left.
+    /// the first launcher left opens instead. System goes on showing another of the apps, if any is left.
     /// </summary>
     private void RemoveCustomAppEntry(CustomAppEntry app)
     {
@@ -142,7 +142,7 @@ public partial class MainViewModel
             _customAppId = _customApps.FirstOrDefault()?.Id ?? "";
             ShowSelectedCustomApp();
         }
-        RebuildLaunchOptions(wasLauncher ? "bigPicture" : null);
+        RebuildLaunchOptions(wasLauncher ? "playnite" : null);
         AppLog.Write($"Aplicativo personalizado: removido {app.Path}");
         SettingChanged();
     }
@@ -154,7 +154,7 @@ public partial class MainViewModel
     /// <summary>The app whose tile menu is open (its id).</summary>
     private string _tileMenuAppId = "";
 
-    /// <summary>Only the apps added with "+" have one: Steam, Playnite and Xbox mode always stay.</summary>
+    /// <summary>Only the apps added with "+" have one: Playnite always stays.</summary>
     public static bool HasTileMenu(LaunchTile? tile) => tile is { IsAdd: false } && CustomApp.IsEntryMode(tile.Option.Value);
 
     /// <summary>Opens the tile's menu in the option picker, titled with the app's name. False when it has none.</summary>

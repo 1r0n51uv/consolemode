@@ -8,9 +8,7 @@ English · [Português (Brasil)](GUIDE.pt-BR.md)
 
 | Mode | On exit |
 |------|---------|
-| **Steam Big Picture** | Automatic restore (app stays in the tray) |
 | **Playnite fullscreen** | Automatic restore (app stays in the tray) |
-| **Xbox mode** | Manual — use *Restore now*, the tray menu, or reopen the window |
 | **Custom app** | Automatic restore when the app (or the process you chose to watch) closes |
 
 If the app closes or the PC shuts down in the middle of a session, the next time Console Mode opens (also at Windows sign-in, if it starts with Windows) it restores everything the session changed: displays, audio, desktop icons and the pointer, and says so.
@@ -31,7 +29,7 @@ The **Task View shortcut** does from the controller what Win + Tab does: it open
 
 Console Mode has one interface, made like a console's: it fills the screen and works with an Xbox or PlayStation controller, the mouse or the keyboard (click a tab or use Page Up / Page Down; Enter and Esc work as A and B). The first time you open it, a guided tour walks through the tabs, the launchers, the play button, the screens, the quick settings and the controller shortcuts; each stop moves on by itself once there has been time to read it (the bar under the card shows how long is left), **A** goes on at once, **B** skips it. To see it again: **System → App → Tutorial**. While the app loads it shows an opening with its logo and an entrance sound; any button skips it, now and then it is, as a surprise, one inspired by the Xbox 360 or the PS4, with that console's sound; **System → App** picks a style (which ends the surprises), plays it right away, and turns it off, or just its sound.
 
-**Home** puts your launchers in a row at the top (Steam Big Picture, Playnite, Xbox mode): **A** on one picks what opens, and **Play now** below starts it. The **+** tile at the end adds an app of your own; on one of those, **☰** (OPTIONS on PlayStation) or a right click opens its menu, with **Remove from Home**. The line under the name says where you will play and what changes (audio, resolution, HDR, VRR); the round button next to Play now opens **Session**, with the screens and quick settings.
+**Home** puts your launchers in a row at the top (Playnite): **A** on one picks what opens, and **Play now** below starts it. The **+** tile at the end adds an app of your own; on one of those, **☰** (OPTIONS on PlayStation) or a right click opens its menu, with **Remove from Home**. The line under the name says where you will play and what changes (audio, resolution, HDR, VRR); the round button next to Play now opens **Session**, with the screens and quick settings.
 
 The **System** tab lists its categories on the left (Gaming display, When entering console mode, Controller, TV, Optional extras, App, Shortcut, help, and data, More apps from the developer). Moving over a category shows its options on the right; **A** or right goes into them, and **B** or left goes back to the categories.
 
@@ -41,7 +39,6 @@ The **System** tab holds every setting, including controller shortcuts, Playnite
 
 Open the shortcut action you want to configure, choose **Set** or **Change**, hold the desired combination on one controller and release the buttons. **Remove** disables that shortcut. During capture, controller buttons do not navigate the interface; use **Cancel** or **Esc** to stop capture. Outside capture, **B** leaves the editor. Address and custom FPS fields accept keyboard input.
 
-When returning from Big Picture, **Send Steam to the tray when going back to the PC** closes the client window while keeping Steam running. With the option off, the desktop client is left open. Steam windows are left alone when a game is running or its state cannot be checked.
 
 Changing the main display can make Windows reshuffle the desktop icons. **Put desktop icons back in place** (on by default) saves where they are before the session and puts them back after the desk is restored. It does nothing when the desktop's **Auto arrange icons** is on, since Windows lays them out itself then. **Hide desktop icons during the session** (off by default) hides them while the session runs, for a clean console look, and shows them again when you go back to the PC; icons that were already hidden stay hidden, and an interrupted session shows them again on the next start.
 
@@ -63,7 +60,6 @@ Console Mode can toggle the Windows VRR optimize setting. For best results, also
 ## Limitations
 
 - Multi-monitor layouts vary; on some setups restore may need a second try from the tray
-- Xbox mode does not detect when fullscreen ends — restore manually
 - The WinUI 3 build currently requires Windows to compile (`net8.0-windows`)
 
 ## Troubleshooting

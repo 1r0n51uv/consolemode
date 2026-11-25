@@ -89,7 +89,6 @@ public partial class MainViewModel
         Controllers = Try("controles", () => CollectControllers()),
         Apps = Try("programas", () => new List<DiagnosticsApp>
         {
-            FoundApp("Steam", SteamSession.FindSteamExe()),
             FoundApp("Playnite", Engine.Launch.GetPlaynitePath()),
             FoundApp("ControlFS", ControlFsService.FindExe())
         }),

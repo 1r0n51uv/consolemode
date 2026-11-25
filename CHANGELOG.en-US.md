@@ -4,6 +4,11 @@ English (US) release notes, mirroring CHANGELOG.md (Brazilian Portuguese). Befor
 
 ## [Unreleased]
 
+## [1.7.1.2]
+### Changes
+- Removed the Steam Big Picture and Xbox mode launchers: Playnite and your own apps remain, and Playnite is the default.
+- Fewer settings: no Playnite folder, no "Send Steam to the tray", no "More apps from the developer" tab, and a simpler Controller category (Task View, wake the PC, short press and session menu outside console mode are gone).
+
 ## [1.7.1.1]
 ### What's new
 - Italian language: the app and the installer are now available in Italian.

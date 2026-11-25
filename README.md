@@ -22,13 +22,13 @@ On 1.6? The app offers the update and keeps your settings. Prefer the old interf
 
 Want to try what comes next before everyone else? Turn on System → App → "Receive test versions (beta)".
 
-Windows 10 or 11, plus [Steam](https://store.steampowered.com/) (Big Picture), [Playnite](https://playnite.link/) or the Xbox app.
+Windows 10 or 11, plus [Playnite](https://playnite.link/) or an app of your own.
 
 ## How it works
 
 1. Open the app and pick the screen you play on. The others turn off.
 2. Press **Play now**, or use the one-click desktop shortcut. The first time on a new screen, the TV asks "Can you see this screen?" and reverts on its own if nobody answers.
-3. Quit Big Picture or Playnite and everything goes back: screens, audio, resolution.
+3. Quit Playnite (or your app) and everything goes back: screens, audio, resolution.
 
 Prefer the couch? With the app in the tray, hold your controller shortcut and it starts from there.
 
@@ -46,7 +46,7 @@ You pick the controller shortcuts yourself: none is on at first, the tour the ap
 - Per-screen **resolution and refresh rate**, **HDR**, and **VRR** while you play
 - Audio goes to the TV (or any output) and comes back afterwards
 - Hides the **desktop icons** during a session if you enable the option and restores their previous visibility when you return to the PC
-- Launches **Steam Big Picture**, **Playnite fullscreen** or **Xbox** mode, and sends Steam to the tray when you go back to the PC
+- Launches **Playnite fullscreen** or an app of your own
 - **Session menu** over the game: switch or close the open windows, change volume, resolution, audio and HDR, hide the mouse pointer or drive it with the controller, and browse your files with [ControlFS](https://github.com/nextestudios/ControlFS) and the web with [JoyChromium](https://github.com/lippdev/joychromium)
 - A console-style interface made for the TV that also works with the mouse and the keyboard (full screen, Xbox and PlayStation pads, LB/RB tabs, its own wallpaper or your Steam covers as the background), with a guided tour the first time you open it
 - **Your own apps** as launchers: any `.exe` (RetroArch, another launcher…) becomes a tile on Home

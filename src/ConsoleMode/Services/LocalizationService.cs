@@ -220,8 +220,6 @@ public sealed class LocalizedStrings : INotifyPropertyChanged
     public string ExitShortcutDescription => LocalizationService.Get(nameof(ExitShortcutDescription));
     public string HomeButtonDescription => LocalizationService.Get(nameof(HomeButtonDescription));
     public string HomeButtonShortPressCard => LocalizationService.Get(nameof(HomeButtonShortPressCard));
-    public string CloseSteamCard => LocalizationService.Get(nameof(CloseSteamCard));
-    public string CloseSteamDescription => LocalizationService.Get(nameof(CloseSteamDescription));
     public string RestoreIconsCard => LocalizationService.Get(nameof(RestoreIconsCard));
     public string RestoreIconsDescription => LocalizationService.Get(nameof(RestoreIconsDescription));
     public string HideIconsCard => LocalizationService.Get(nameof(HideIconsCard));
@@ -241,13 +239,6 @@ public sealed class LocalizedStrings : INotifyPropertyChanged
     public string BetaUpdatesCard => LocalizationService.Get(nameof(BetaUpdatesCard));
     public string BetaUpdatesDescription => LocalizationService.Get(nameof(BetaUpdatesDescription));
     public string HelpDataSection => LocalizationService.Get(nameof(HelpDataSection));
-    public string OtherAppsSection => LocalizationService.Get(nameof(OtherAppsSection));
-    public string OtherAppsControlFsDescription => LocalizationService.Get(nameof(OtherAppsControlFsDescription));
-    public string OtherAppsTakoDescription => LocalizationService.Get(nameof(OtherAppsTakoDescription));
-    public string OtherAppsJoyChromiumDescription => LocalizationService.Get(nameof(OtherAppsJoyChromiumDescription));
-    public string OtherAppsStageAlpha => LocalizationService.Get(nameof(OtherAppsStageAlpha));
-    public string OtherAppsStageClosedAlpha => LocalizationService.Get(nameof(OtherAppsStageClosedAlpha));
-    public string OtherAppsStageBeta => LocalizationService.Get(nameof(OtherAppsStageBeta));
     public string TvConfirmationCard => LocalizationService.Get(nameof(TvConfirmationCard));
     public string TvConfirmationDescription => LocalizationService.Get(nameof(TvConfirmationDescription));
     public string TutorialCard => LocalizationService.Get(nameof(TutorialCard));
