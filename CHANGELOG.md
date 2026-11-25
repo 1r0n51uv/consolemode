@@ -4,6 +4,7 @@ Notas em português do Brasil; a versão em inglês (Estados Unidos) fica em `CH
 
 ## [Unreleased]
 ### Mudanças
+- Novo visual de vidro líquido, inspirado no tvOS e na tela inicial do PS5: cartões, linhas e barras de vidro translúcido com a borda iluminada, barra superior de vidro com as abas numa cápsula, brilho e salto elástico no bloco em foco e um halo no fundo na cor do iniciador selecionado. **Sistema → App → Vidro** escolhe o material (escuro, claro, transparente, destaque).
 - Edição enxuta: removidos o controle da TV (Google TV / Android TV), o limite e o contador de FPS (RTSS), os perfis por jogo, a API de controle local e os links `consolemode://`, o desligar por DDC/CI e os idiomas espanhol, alemão, francês e russo.
 
 ## [1.7.2]
