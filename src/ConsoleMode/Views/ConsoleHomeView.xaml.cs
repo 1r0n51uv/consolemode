@@ -280,7 +280,10 @@ public sealed partial class ConsoleHomeView : UserControl
         var index = tiles.FindIndex(tile => tile.IsSelected);
         if (index < 0) index = tiles.FindIndex(tile => tile.IsLauncher);
         if (index < 0) index = 0;
-        return LaunchRow.ContainerFromIndex(index) is ContentPresenter { ContentTemplateRoot: DockCard card } && card.BodyButton.Focus(FocusState.Keyboard);
+        return LaunchRow.ContainerFromIndex(index) is DependencyObject container
+               && Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(container) > 0
+               && Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(container, 0) is DockCard card
+               && card.BodyButton.Focus(FocusState.Keyboard);
     }
 
     /// <summary>
