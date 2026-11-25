@@ -333,7 +333,7 @@ public partial class MainViewModel : ObservableObject
             TaskViewPlayStation = config.TaskViewPlayStation;
             ConsoleBackgroundMode = ConsoleBackgroundService.NormalizeMode(config.ConsoleBackground);
             ConsoleBackgroundImage = config.ConsoleBackgroundImage ?? "";
-            CardMaterial = Services.CardMaterial.Normalize(config.CardMaterial);
+            GlassMaterial = CardMaterial.Normalize(config.CardMaterial);
             CloseSteamOnRestore = config.CloseSteamOnRestore;
             RestoreDesktopIcons = config.RestoreDesktopIcons;
             HideDesktopIcons = config.HideDesktopIcons;
@@ -876,7 +876,7 @@ public partial class MainViewModel : ObservableObject
             MenuOutsideSession = MenuOutsideSession,
             ConsoleBackground = ConsoleBackgroundMode,
             ConsoleBackgroundImage = ConsoleBackgroundImage,
-            CardMaterial = Services.CardMaterial.Normalize(CardMaterial),
+            CardMaterial = CardMaterial.Normalize(GlassMaterial),
             CloseSteamOnRestore = CloseSteamOnRestore,
             RestoreDesktopIcons = RestoreDesktopIcons,
             HideDesktopIcons = HideDesktopIcons,

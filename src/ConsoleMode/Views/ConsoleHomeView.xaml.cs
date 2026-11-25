@@ -72,7 +72,7 @@ public sealed partial class ConsoleHomeView : UserControl
         LaunchRow.AddHandler(UIElement.PointerCanceledEvent, new PointerEventHandler((_, _) => _launchPointerDown = false), true);
         // The sounds are the pad's (GamepadNavigator, LB / RB): mouse clicks stay silent.
         ViewModel.PropertyChanged += OnViewModelChanged;
-        ApplyCardMaterial(ViewModel.CardMaterial);
+        ApplyCardMaterial(ViewModel.GlassMaterial);
         if (ViewModel.IsIntroShowing) ShowIntro();
         ViewModel.PickBackgroundImageRequested += () => _ = PickBackgroundImageAsync();
     }
@@ -152,8 +152,8 @@ public sealed partial class ConsoleHomeView : UserControl
     {
         switch (e.PropertyName)
         {
-            case nameof(MainViewModel.CardMaterial):
-                ApplyCardMaterial(ViewModel.CardMaterial);
+            case nameof(MainViewModel.GlassMaterial):
+                ApplyCardMaterial(ViewModel.GlassMaterial);
                 break;
             case nameof(MainViewModel.IsSystemTab) when ViewModel.IsSystemTab:
                 // Entering System: the list's edges land with it, never a hard cut that then fades.
