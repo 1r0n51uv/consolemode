@@ -169,6 +169,7 @@ public partial class MainViewModel
             case "sounds": InterfaceSounds = !InterfaceSounds; break;
             case "introsound": IntroSound = !IntroSound; break;
             case "background": CycleBackgroundMode(); break;
+            case "material": CycleCardMaterial(); break;
             case "backgroundimage": PickBackgroundImage(); break;
             case "startup": StartWithWindows = !StartWithWindows; break;
             case "minimizetray": MinimizeToTray = !MinimizeToTray; break;

@@ -82,8 +82,39 @@
                 <Setter Property="Padding" Value="10,3"/>
             </Style>
 
-            <!-- Template of every console surface (cards, rows, categories, tabs, round buttons): the hover is a soft
-                 veil that fades in and out, a press sinks the tile a little. No grey Fluent fills or dimmed text. -->
+            <!-- ───────────── Liquid glass ─────────────
+                 One shared acrylic fill (its tint is changed live by GlassMaterial: dark, light, clear, accent), a
+                 diagonal sheen, and an edge that catches light: bright at the top-left, soft in the middle, a second
+                 glint at the bottom-right. The focus lights the edge, sweeps a shine across and lifts the tile. -->
+            <AcrylicBrush x:Key="GlassFill" TintColor="#0D141D" TintOpacity="0.42" TintLuminosityOpacity="0.6" FallbackColor="#E6131A24"/>
+            <LinearGradientBrush x:Key="GlassSheen" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#33FFFFFF" Offset="0"/>
+                <GradientStop Color="#0DFFFFFF" Offset="0.38"/>
+                <GradientStop Color="#00FFFFFF" Offset="0.62"/>
+                <GradientStop Color="#12FFFFFF" Offset="1"/>
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="GlassEdge" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#8CFFFFFF" Offset="0"/>
+                <GradientStop Color="#1FFFFFFF" Offset="0.4"/>
+                <GradientStop Color="#0FFFFFFF" Offset="0.62"/>
+                <GradientStop Color="#59FFFFFF" Offset="1"/>
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="GlassEdgeFocused" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                <GradientStop Color="#80FFFFFF" Offset="0.45"/>
+                <GradientStop Color="#4DFFFFFF" Offset="0.6"/>
+                <GradientStop Color="#D9FFFFFF" Offset="1"/>
+            </LinearGradientBrush>
+            <!-- A glass capsule for bars and chips (the top bar, the active tab) -->
+            <Style x:Key="GlassCapsule" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource GlassFill}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource GlassEdge}"/>
+                <Setter Property="BorderThickness" Value="1.2"/>
+                <Setter Property="CornerRadius" Value="28"/>
+            </Style>
+
+            <!-- Glass tile: every card, row, round button. The hover is a soft veil, the focus lifts the tile (the view
+                 springs it up, ConsoleHomeView.ScaleTile), lights its edge and sweeps a shine across it; a press sinks it. -->
             <ControlTemplate x:Key="ConsoleSurfaceTemplate" TargetType="Button">
                 <Grid x:Name="Root" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
@@ -118,10 +149,47 @@
                                 </Storyboard>
                             </VisualState>
                         </VisualStateGroup>
+                        <VisualStateGroup x:Name="FocusStates">
+                            <VisualState x:Name="Unfocused"/>
+                            <VisualState x:Name="PointerFocused"/>
+                            <VisualState x:Name="Focused">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="EdgeFocus" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.18"/>
+                                    <DoubleAnimation Storyboard.TargetName="Glow" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25"/>
+                                    <DoubleAnimation Storyboard.TargetName="ShineShift" Storyboard.TargetProperty="X" From="-1.4" To="1.4" Duration="0:0:0.9" EnableDependentAnimation="True">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseInOut"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Shine" Storyboard.TargetProperty="Opacity" Duration="0:0:0.9">
+                                        <LinearDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                                        <LinearDoubleKeyFrame KeyTime="0:0:0.15" Value="1"/>
+                                        <LinearDoubleKeyFrame KeyTime="0:0:0.75" Value="1"/>
+                                        <LinearDoubleKeyFrame KeyTime="0:0:0.9" Value="0"/>
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualState>
+                        </VisualStateGroup>
                     </VisualStateManager.VisualStateGroups>
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}"/>
+                    <Border Background="{StaticResource GlassFill}" CornerRadius="{TemplateBinding CornerRadius}"/>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}"/>
+                    <Border Background="{StaticResource GlassSheen}" CornerRadius="{TemplateBinding CornerRadius}" IsHitTestVisible="False"/>
                     <Border x:Name="Hover" Opacity="0" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="{TemplateBinding CornerRadius}" IsHitTestVisible="False"/>
+                    <Border x:Name="Shine" Opacity="0" CornerRadius="{TemplateBinding CornerRadius}" IsHitTestVisible="False">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.35">
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TranslateTransform x:Name="ShineShift" X="-1.4"/>
+                                </LinearGradientBrush.RelativeTransform>
+                                <GradientStop Color="#00FFFFFF" Offset="0.3"/>
+                                <GradientStop Color="#40FFFFFF" Offset="0.5"/>
+                                <GradientStop Color="#00FFFFFF" Offset="0.7"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                    <Border BorderBrush="{StaticResource GlassEdge}" BorderThickness="1.2" CornerRadius="{TemplateBinding CornerRadius}" IsHitTestVisible="False"/>
+                    <Border x:Name="EdgeFocus" Opacity="0" BorderBrush="{StaticResource GlassEdgeFocused}" BorderThickness="2.5" CornerRadius="{TemplateBinding CornerRadius}" IsHitTestVisible="False"/>
+                    <Border x:Name="Glow" Opacity="0" Margin="-7" BorderBrush="#2EFFFFFF" BorderThickness="6" CornerRadius="{TemplateBinding CornerRadius}" IsHitTestVisible="False"/>
                     <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
                                       Padding="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
                                       HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -130,54 +198,110 @@
                 </Grid>
             </ControlTemplate>
 
-            <!-- Console (10-foot) interface: flat dark tiles over the game art, no hairlines; the focus is a clean
-                 white outline and the tile grows a little (see ConsoleHomeView), like a console home. -->
+            <!-- Flat surface: the tabs and the System categories. No glass of its own (they sit on a glass bar or on
+                 the background); the hover is a veil and the focus fills a soft capsule. -->
+            <ControlTemplate x:Key="ConsoleFlatTemplate" TargetType="Button">
+                <Grid x:Name="Root" RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform>
+                        <ScaleTransform x:Name="Scale"/>
+                    </Grid.RenderTransform>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualStateGroup.Transitions>
+                                <VisualTransition To="Pressed" GeneratedDuration="0:0:0.08"/>
+                                <VisualTransition GeneratedDuration="0:0:0.2">
+                                    <VisualTransition.GeneratedEasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </VisualTransition.GeneratedEasingFunction>
+                                </VisualTransition>
+                            </VisualStateGroup.Transitions>
+                            <VisualState x:Name="Normal"/>
+                            <VisualState x:Name="PointerOver">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0"/>
+                                </Storyboard>
+                            </VisualState>
+                            <VisualState x:Name="Pressed">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" To="1" Duration="0"/>
+                                    <DoubleAnimation Storyboard.TargetName="Scale" Storyboard.TargetProperty="ScaleX" To="0.97" Duration="0"/>
+                                    <DoubleAnimation Storyboard.TargetName="Scale" Storyboard.TargetProperty="ScaleY" To="0.97" Duration="0"/>
+                                </Storyboard>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Root" Storyboard.TargetProperty="Opacity" To="0.4" Duration="0"/>
+                                </Storyboard>
+                            </VisualState>
+                        </VisualStateGroup>
+                        <VisualStateGroup x:Name="FocusStates">
+                            <VisualState x:Name="Unfocused"/>
+                            <VisualState x:Name="PointerFocused"/>
+                            <VisualState x:Name="Focused">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="FocusFill" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}"/>
+                    <Border x:Name="Hover" Opacity="0" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="{TemplateBinding CornerRadius}" IsHitTestVisible="False"/>
+                    <Border x:Name="FocusFill" Opacity="0" Background="#2EFFFFFF" BorderBrush="{StaticResource GlassEdgeFocused}" BorderThickness="1.5"
+                            CornerRadius="{TemplateBinding CornerRadius}" IsHitTestVisible="False"/>
+                    <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      AutomationProperties.AccessibilityView="Raw"/>
+                </Grid>
+            </ControlTemplate>
+
+            <!-- Console (10-foot) interface: glass tiles over the art; the focus lights the edge and the tile grows a
+                 little (see ConsoleHomeView), like a console home. -->
             <Style x:Key="ConsoleCard" TargetType="Button">
                 <Setter Property="MinWidth" Value="220"/>
                 <Setter Property="MinHeight" Value="120"/>
                 <Setter Property="Padding" Value="22,18"/>
-                <Setter Property="CornerRadius" Value="18"/>
+                <Setter Property="CornerRadius" Value="26"/>
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                <Setter Property="Background" Value="#D9131820"/>
+                <Setter Property="Background" Value="#0AFFFFFF"/>
                 <Setter Property="Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}"/>
                 <Setter Property="Template" Value="{StaticResource ConsoleSurfaceTemplate}"/>
                 <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="UseSystemFocusVisuals" Value="True"/>
-                <Setter Property="FocusVisualPrimaryBrush" Value="White"/>
-                <Setter Property="FocusVisualPrimaryThickness" Value="3"/>
-                <Setter Property="FocusVisualSecondaryThickness" Value="0"/>
-                <Setter Property="FocusVisualMargin" Value="-5"/>
+                <Setter Property="UseSystemFocusVisuals" Value="False"/>
             </Style>
-            <!-- One launcher in the console Home row: a square tile with the launcher's colours. -->
+            <!-- One launcher in the console Home row: a square glass tile tinted with the launcher's colours. -->
             <Style x:Key="LaunchTileButton" TargetType="Button" BasedOn="{StaticResource ConsoleCard}">
-                <Setter Property="Width" Value="156"/>
-                <Setter Property="Height" Value="156"/>
+                <Setter Property="Width" Value="176"/>
+                <Setter Property="Height" Value="176"/>
                 <Setter Property="MinWidth" Value="0"/>
                 <Setter Property="MinHeight" Value="0"/>
                 <Setter Property="Padding" Value="12,14"/>
-                <Setter Property="CornerRadius" Value="22"/>
-                <Setter Property="FocusVisualMargin" Value="-6"/>
+                <Setter Property="CornerRadius" Value="38"/>
             </Style>
-            <!-- A tab in the console top bar: plain text, the active one lit with a short underline. -->
+            <!-- A tab in the console top bar: plain text on the glass bar; the active one sits in a glass capsule. -->
             <Style x:Key="ConsoleTab" TargetType="Button">
-                <Setter Property="Template" Value="{StaticResource ConsoleSurfaceTemplate}"/>
+                <Setter Property="Template" Value="{StaticResource ConsoleFlatTemplate}"/>
                 <Setter Property="Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}"/>
-                <Setter Property="Padding" Value="16,8"/>
+                <Setter Property="Padding" Value="22,8"/>
                 <Setter Property="CornerRadius" Value="22"/>
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="FontSize" Value="22"/>
+                <Setter Property="FontSize" Value="21"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="UseSystemFocusVisuals" Value="False"/>
                 <!-- Reached with LB / RB (or a click), never by moving the focus. -->
                 <Setter Property="IsTabStop" Value="False"/>
             </Style>
+            <!-- The active tab: a lit glass capsule behind its name (drawn first, in the tab's Grid). -->
             <Style x:Key="TabUnderline" TargetType="Border">
-                <Setter Property="Height" Value="3"/>
-                <Setter Property="CornerRadius" Value="2"/>
-                <Setter Property="VerticalAlignment" Value="Bottom"/>
-                <Setter Property="Margin" Value="0,0,0,-8"/>
-                <Setter Property="Background" Value="{ThemeResource AccentFillColorDefaultBrush}"/>
+                <Setter Property="CornerRadius" Value="20"/>
+                <Setter Property="Margin" Value="-22,-8"/>
+                <Setter Property="Background" Value="#38FFFFFF"/>
+                <Setter Property="BorderBrush" Value="{StaticResource GlassEdgeFocused}"/>
+                <Setter Property="BorderThickness" Value="1.2"/>
             </Style>
             <!-- Round icon button in the console top bar (settings, desktop). -->
             <Style x:Key="ConsoleNavButton" TargetType="Button">
@@ -191,16 +315,12 @@
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="UseSystemFocusVisuals" Value="True"/>
-                <Setter Property="FocusVisualPrimaryBrush" Value="White"/>
-                <Setter Property="FocusVisualPrimaryThickness" Value="3"/>
-                <Setter Property="FocusVisualSecondaryThickness" Value="0"/>
-                <Setter Property="FocusVisualMargin" Value="-4"/>
+                <Setter Property="UseSystemFocusVisuals" Value="False"/>
             </Style>
             <!-- Round badge for controller button hints (A, B, ☰, Y). Shared by the console screen and the session menu. -->
             <Style x:Key="HintBadge" TargetType="Border">
-                <Setter Property="Background" Value="{ThemeResource ControlFillColorSecondaryBrush}"/>
-                <Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefaultBrush}"/>
+                <Setter Property="Background" Value="#26FFFFFF"/>
+                <Setter Property="BorderBrush" Value="{StaticResource GlassEdge}"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="CornerRadius" Value="16"/>
                 <Setter Property="MinWidth" Value="32"/>
@@ -213,30 +333,35 @@
             <Style x:Key="ConsoleRow" TargetType="Button" BasedOn="{StaticResource ConsoleCard}">
                 <Setter Property="MinHeight" Value="72"/>
                 <Setter Property="Height" Value="72"/>
-                <Setter Property="Padding" Value="24,0"/>
-                <Setter Property="CornerRadius" Value="12"/>
-                <Setter Property="Background" Value="#14FFFFFF"/>
+                <Setter Property="Padding" Value="28,0"/>
+                <Setter Property="CornerRadius" Value="22"/>
+                <Setter Property="Background" Value="#0AFFFFFF"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="FocusVisualMargin" Value="-3"/>
             </Style>
             <!-- A category in the console System tab's left column: just its name, no tile. -->
             <Style x:Key="ConsoleCategory" TargetType="Button" BasedOn="{StaticResource ConsoleRow}">
+                <Setter Property="Template" Value="{StaticResource ConsoleFlatTemplate}"/>
                 <Setter Property="MinHeight" Value="60"/>
                 <Setter Property="Height" Value="60"/>
-                <Setter Property="Padding" Value="20,0"/>
+                <Setter Property="Padding" Value="22,0"/>
+                <Setter Property="CornerRadius" Value="30"/>
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             </Style>
-            <Style x:Key="ConsolePlayButton" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
-                <Setter Property="Height" Value="64"/>
+            <!-- Play now: accent-tinted glass, a pill. -->
+            <Style x:Key="ConsolePlayButton" TargetType="Button">
+                <Setter Property="Template" Value="{StaticResource ConsoleSurfaceTemplate}"/>
+                <Setter Property="Height" Value="68"/>
                 <Setter Property="MinWidth" Value="300"/>
-                <Setter Property="Padding" Value="36,0"/>
-                <Setter Property="CornerRadius" Value="32"/>
-                <Setter Property="FocusVisualPrimaryBrush" Value="White"/>
-                <Setter Property="FocusVisualPrimaryThickness" Value="4"/>
-                <Setter Property="FocusVisualSecondaryThickness" Value="0"/>
-                <Setter Property="FocusVisualMargin" Value="-6"/>
+                <Setter Property="Padding" Value="38,0"/>
+                <Setter Property="CornerRadius" Value="34"/>
+                <Setter Property="Background" Value="#992FB88C"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="UseSystemFocusVisuals" Value="False"/>
             </Style>
             <Style x:Key="ConsoleSmallButton" TargetType="Button">
                 <Setter Property="Height" Value="44"/>

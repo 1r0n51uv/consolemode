@@ -68,7 +68,7 @@ public partial class MainViewModel
     private const int LaunchLogoSize = 256;
 
     /// <summary>The logo's size on a tile (ConsoleHomeView.xaml), grown by the focused tile's 1.14 (ConsoleHomeView.ScaleTile).</summary>
-    private const double LaunchLogoShown = 64 * 1.14;
+    private const double LaunchLogoShown = 80 * 1.14;
 
     /// <summary>The screen's pixels per interface pixel (Windows' scale times the interface's, UiScaleHost), from the window.</summary>
     private double _logoScale = 1;
@@ -191,14 +191,27 @@ public partial class MainViewModel
         HomeMetaText = string.Concat(SummaryItems.Skip(1).Select(item => "  ·  " + item));
     }
 
+    /// <summary>The selected launcher's colour, faint, for the glow over the background; and the same colour fully clear.</summary>
+    public Windows.UI.Color AmbientColor => Tint(0x70);
+    public Windows.UI.Color AmbientFade => Tint(0x00);
+
+    private Windows.UI.Color Tint(byte alpha)
+    {
+        var from = LaunchArt.For(SelectedLaunch?.Value).From;
+        return Microsoft.UI.ColorHelper.FromArgb(alpha, (byte)(from >> 16), (byte)(from >> 8), (byte)from);
+    }
+
+    /// <summary>The tile's colours, see-through enough for the glass under them to show.</summary>
+    private static uint Glassy(uint argb, byte alpha) => (argb & 0x00FFFFFF) | ((uint)alpha << 24);
+
     private static LinearGradientBrush TileGradient(uint from, uint to) => new()
     {
         StartPoint = new Windows.Foundation.Point(0, 0),
         EndPoint = new Windows.Foundation.Point(1, 1),
         GradientStops =
         {
-            new GradientStop { Color = Argb(from), Offset = 0 },
-            new GradientStop { Color = Argb(to), Offset = 1 }
+            new GradientStop { Color = Argb(Glassy(from, 0x99)), Offset = 0 },
+            new GradientStop { Color = Argb(Glassy(to, 0x66)), Offset = 1 }
         }
     };
 

@@ -138,6 +138,9 @@ public sealed class AppConfig
     /// <summary>The picture used when the background is "image".</summary>
     public string ConsoleBackgroundImage { get; set; } = "";
 
+    /// <summary>The glass of cards, rows and bars: "dark" | "light" | "clear" | "accent" (CardMaterial).</summary>
+    public string CardMaterial { get; set; } = "dark";
+
     /// <summary>A version the user chose to skip; newer ones are still announced.</summary>
     public string SkippedUpdateVersion { get; set; } = "";
 

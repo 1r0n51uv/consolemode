@@ -333,6 +333,7 @@ public partial class MainViewModel : ObservableObject
             TaskViewPlayStation = config.TaskViewPlayStation;
             ConsoleBackgroundMode = ConsoleBackgroundService.NormalizeMode(config.ConsoleBackground);
             ConsoleBackgroundImage = config.ConsoleBackgroundImage ?? "";
+            CardMaterial = Services.CardMaterial.Normalize(config.CardMaterial);
             CloseSteamOnRestore = config.CloseSteamOnRestore;
             RestoreDesktopIcons = config.RestoreDesktopIcons;
             HideDesktopIcons = config.HideDesktopIcons;
@@ -539,6 +540,8 @@ public partial class MainViewModel : ObservableObject
     {
         OnCustomAppPicked(value?.Value);
         OnPropertyChanged(nameof(LaunchDescription));
+        OnPropertyChanged(nameof(AmbientColor));
+        OnPropertyChanged(nameof(AmbientFade));
         SyncLaunchTiles();
         OnPropertyChanged(nameof(IsCustomApp));
         SettingChanged();
@@ -873,6 +876,7 @@ public partial class MainViewModel : ObservableObject
             MenuOutsideSession = MenuOutsideSession,
             ConsoleBackground = ConsoleBackgroundMode,
             ConsoleBackgroundImage = ConsoleBackgroundImage,
+            CardMaterial = Services.CardMaterial.Normalize(CardMaterial),
             CloseSteamOnRestore = CloseSteamOnRestore,
             RestoreDesktopIcons = RestoreDesktopIcons,
             HideDesktopIcons = HideDesktopIcons,
