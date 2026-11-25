@@ -132,6 +132,9 @@ public sealed class AppConfig
     /// <summary>The picture used when the background is "image".</summary>
     public string ConsoleBackgroundImage { get; set; } = "";
 
+    /// <summary>A picture for a launcher's card and one for the background while it is open, by launcher value (LaunchImageSet).</summary>
+    public Dictionary<string, LaunchImageSet> LaunchImages { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
     /// <summary>The glass of cards, rows and bars: "dark" | "light" | "clear" | "accent" (CardMaterial).</summary>
     public string CardMaterial { get; set; } = "dark";
 
@@ -326,6 +329,17 @@ public sealed class ScreenRect
     public int Y { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
+}
+
+public sealed class LaunchImageSet
+{
+    /// <summary>The card's own picture (a copy in the data folder); empty = none.</summary>
+    public string Card { get; set; } = "";
+    /// <summary>The background shown while the card is open; empty = none.</summary>
+    public string Background { get; set; } = "";
+
+    [JsonIgnore]
+    public bool IsEmpty => string.IsNullOrWhiteSpace(Card) && string.IsNullOrWhiteSpace(Background);
 }
 
 public sealed class ConsoleRuntimeState

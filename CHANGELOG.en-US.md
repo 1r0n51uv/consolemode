@@ -4,6 +4,13 @@ English (US) release notes, mirroring CHANGELOG.md (Brazilian Portuguese). Befor
 
 ## [Unreleased]
 
+## [1.7.1.3]
+### What's new
+- **A new Home:** a dock of glass cards at the bottom. The card with the focus or the pointer opens up to show where you will play, what changes and Play; the others stay small. The last card, Settings, opens every setting, and the displays moved there (Gaming display). The top bar and the Session page are gone.
+- **A picture for each card, and one for the background:** open a card's menu (☰, or a right click) and pick **Card picture** or **Background picture**. The glass, the glow and the Play pill take their colours from the pictures.
+### Fixes
+- The update banner is readable (white text on glass, not on a light accent) and shows the full version, like 1.7.1.3.
+
 ## [1.7.1.2]
 ### Changes
 - Removed the Steam Big Picture and Xbox mode launchers: Playnite and your own apps remain, and Playnite is the default.

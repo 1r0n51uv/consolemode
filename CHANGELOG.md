@@ -4,6 +4,13 @@ Notas em português do Brasil; a versão em inglês (Estados Unidos) fica em `CH
 
 ## [Unreleased]
 
+## [1.7.1.3]
+### Novidades
+- **Um Início novo:** um dock de blocos de vidro na parte de baixo. O bloco com o foco ou o ponteiro se abre e mostra onde você vai jogar, o que muda e o botão Jogar; os outros ficam pequenos. O último bloco, Ajustes, abre todos os ajustes, e as telas foram para lá (Tela de jogo). A barra de cima e a página Sessão acabaram.
+- **Uma imagem para cada bloco e outra para o fundo:** abra o menu do bloco (☰ ou botão direito) e escolha **Imagem do bloco** ou **Imagem de fundo**. O vidro, o brilho e o botão Jogar usam as cores das imagens.
+### Correções
+- O aviso de atualização ficou legível (texto branco sobre vidro, não sobre um destaque claro) e mostra a versão completa, como 1.7.1.3.
+
 ## [1.7.1.2]
 ### Mudanças
 - Removidos os iniciadores Steam Big Picture e Modo Xbox: ficam o Playnite e os seus aplicativos, e o Playnite é o padrão.

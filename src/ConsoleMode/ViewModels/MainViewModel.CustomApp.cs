@@ -151,21 +151,27 @@ public partial class MainViewModel
 
     private const string TileMenuRemove = "remove";
     private const string TileMenuCancel = "cancel";
-    /// <summary>The app whose tile menu is open (its id).</summary>
-    private string _tileMenuAppId = "";
+    private const string TileMenuCard = "card";
+    private const string TileMenuBackground = "background";
+    private const string TileMenuClear = "clear";
+    /// <summary>The card whose menu is open.</summary>
+    private LaunchTile? _tileMenuTile;
 
-    /// <summary>Only the apps added with "+" have one: Playnite always stays.</summary>
-    public static bool HasTileMenu(LaunchTile? tile) => tile is { IsAdd: false } && CustomApp.IsEntryMode(tile.Option.Value);
+    /// <summary>Every launcher has a menu: its pictures, and for your own apps Remove from Home.</summary>
+    public static bool HasTileMenu(LaunchTile? tile) => tile is { IsLauncher: true };
 
-    /// <summary>Opens the tile's menu in the option picker, titled with the app's name. False when it has none.</summary>
+    /// <summary>Opens the card's menu in the option picker, titled with its name. False when it has none.</summary>
     public bool OpenTileMenu(LaunchTile? tile)
     {
-        if (IsConsoleActive || !HasTileMenu(tile) || CustomApp.EntryId(tile!.Option.Value) is not { } id) return false;
-        _tileMenuAppId = id;
+        if (IsConsoleActive || !HasTileMenu(tile)) return false;
+        _tileMenuTile = tile;
         _pickerKey = "tile";
-        PickerTitle = tile.Text;
+        PickerTitle = tile!.Text;
         PickerOptions.Clear();
-        PickerOptions.Add(new PickerItem(LocalizationService.Get("RemoveFromHome"), TileMenuRemove, false));
+        PickerOptions.Add(new PickerItem(LocalizationService.Get("TileMenuCardImage"), TileMenuCard, false));
+        PickerOptions.Add(new PickerItem(LocalizationService.Get("TileMenuBackgroundImage"), TileMenuBackground, false));
+        if (HasLaunchImages(tile)) PickerOptions.Add(new PickerItem(LocalizationService.Get("TileMenuClearImages"), TileMenuClear, false));
+        if (CustomApp.IsEntryMode(tile.Option.Value)) PickerOptions.Add(new PickerItem(LocalizationService.Get("RemoveFromHome"), TileMenuRemove, false));
         PickerOptions.Add(new PickerItem(LocalizationService.Get("Cancel"), TileMenuCancel, false));
         IsRolePanelOpen = false;
         IsPickerOpen = true;
@@ -175,8 +181,18 @@ public partial class MainViewModel
 
     private void PickTileMenu(string value)
     {
-        if (value == TileMenuRemove && _customApps.FirstOrDefault(a => a.Id == _tileMenuAppId) is { } app) RemoveCustomAppEntry(app);
-        _tileMenuAppId = "";
+        var tile = _tileMenuTile;
+        _tileMenuTile = null;
+        if (tile is null) return;
+        switch (value)
+        {
+            case TileMenuCard: PickLaunchImageRequested?.Invoke(tile, ImageKindCard); break;
+            case TileMenuBackground: PickLaunchImageRequested?.Invoke(tile, ImageKindBackground); break;
+            case TileMenuClear: ClearLaunchImages(tile); break;
+            case TileMenuRemove:
+                if (CustomApp.EntryId(tile.Option.Value) is { } id && _customApps.FirstOrDefault(a => a.Id == id) is { } app) RemoveCustomAppEntry(app);
+                break;
+        }
     }
 
     private async Task<string?> PickExeAsync()

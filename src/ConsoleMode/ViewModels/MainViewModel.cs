@@ -307,6 +307,7 @@ public partial class MainViewModel : ObservableObject
 
             SelectedHideStrategy = HideStrategies.FirstOrDefault(s => s.Value == config.HideStrategy) ?? HideStrategies[0];
             PlaynitePath = config.PlaynitePath ?? "";
+            LoadLaunchImages(config);
             LoadCustomApps(config);
             IsPlayniteAvailable = Engine.Launch.IsPlayniteAvailable();
             BuildLocalizedOptions();
@@ -841,6 +842,7 @@ public partial class MainViewModel : ObservableObject
             // The engine knows one "customApp" mode: the selected app's values go in the CustomApp* fields.
             FullscreenMode = CustomApp.IsEntryMode(SelectedLaunch?.Value) ? CustomApp.Mode : SelectedLaunch?.Value ?? "playnite",
             CustomApps = CustomAppsToSave(),
+            LaunchImages = LaunchImagesToSave(),
             CustomAppId = _customAppId,
             PlaynitePath = PlaynitePath,
             CustomAppPath = CustomApp.CleanPath(CustomAppPath),

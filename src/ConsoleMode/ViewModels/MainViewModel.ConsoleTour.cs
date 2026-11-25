@@ -30,9 +30,7 @@ public partial class MainViewModel
     /// <summary>The button hints of the pad in use (✕ or A…) and the names the texts point to.</summary>
     private object[] ConsoleTourArgs(ConsoleTourStop stop) => stop switch
     {
-        ConsoleTourStop.Tabs => [HintLb, HintRb],
         ConsoleTourStop.Launchers => [HintConfirm, HintMenu],
-        ConsoleTourStop.Play => [HintConfirm, HintMenu],
         ConsoleTourStop.Screens => [HintConfirm],
         ConsoleTourStop.System => [HintAlt],
         ConsoleTourStop.Done => [LocalizationService.Get("AppSection"), LocalizationService.Get("TutorialCard")],
