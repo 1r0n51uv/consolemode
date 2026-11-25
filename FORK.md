@@ -16,8 +16,8 @@ Ours is upstream's version plus a fourth number, our own variant: with upstream 
 1.7.1.1, 1.7.1.2, and so on. When upstream releases 1.7.2 and we take something from it, the next one is
 1.7.2.1. The number is set by hand in `src/ConsoleMode/ConsoleMode.csproj` (`Version`, `AssemblyVersion`,
 `FileVersion`, `InformationalVersion`) with a `## [<version>]` section in both changelogs. The keeper never
-changes it. (1.7.2, published earlier with the Italian catalog, is above this line: the first install of
-1.7.1.1 is done by hand over it, because the update check does not offer a lower version.)
+changes it. 1.7.1.1 is the first one: our 1.7.2 (Italian) plus the lean edition and the new look; the
+earlier 1.7.2 release was deleted.
 
 ## Removed (upstream changes here are skipped, unless 1ron51uv asks otherwise)
 
