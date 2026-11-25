@@ -19,8 +19,6 @@ public static class PointerParking
     /// <summary>Between two parks, so the second one lands after the launcher has settled.</summary>
     public static readonly TimeSpan Between = TimeSpan.FromSeconds(3);
 
-    /// <summary>Xbox mode shows no window the app can watch: it is parked this long after the launch instead.</summary>
-    public static readonly TimeSpan XboxDelay = TimeSpan.FromSeconds(4);
 
     /// <summary>The bottom-right corner of the screen, a few pixels inside it.</summary>
     public static (int X, int Y) BottomRight(ScreenRect rect) =>

@@ -18,7 +18,7 @@ public sealed class AppConfig
     public string FocusMonitor { get; set; } = "";
     public List<string> HideMonitors { get; set; } = [];
     public string HideStrategy { get; set; } = "disconnect";
-    public string FullscreenMode { get; set; } = "bigPicture";
+    public string FullscreenMode { get; set; } = "playnite";
 
     /// <summary>Playnite folder or exe chosen by the user (portable installs); empty = auto-detect.</summary>
     public string PlaynitePath { get; set; } = "";
@@ -92,12 +92,6 @@ public sealed class AppConfig
 
     /// <summary>A short press of the Guide button is enough (Game Bar's own shortcut is turned off).</summary>
     public bool HomeButtonShortPress { get; set; }
-
-    /// <summary>
-    /// Going back to the PC closes Steam's client window to the tray, unless a game is running.
-    /// Big Picture itself is always closed.
-    /// </summary>
-    public bool CloseSteamOnRestore { get; set; } = true;
 
     /// <summary>Put the desktop icons back where they were after the session (issue #30).</summary>
     public bool RestoreDesktopIcons { get; set; } = true;
@@ -351,8 +345,7 @@ public sealed class ConsoleRuntimeState
     public bool FocusWasInactive { get; set; }
     public List<string> HideMonitors { get; set; } = [];
     public string HideStrategy { get; set; } = "disconnect";
-    public string FullscreenMode { get; set; } = "bigPicture";
-    public bool CloseSteamOnRestore { get; set; } = true;
+    public string FullscreenMode { get; set; } = "playnite";
     public string? AudioDeviceId { get; set; }
     public bool AudioAutoSwitch { get; set; }
     public string? AudioDeviceHint { get; set; }
@@ -375,7 +368,6 @@ public sealed class ConsoleRuntimeState
     /// <summary>Nobody named a process to watch: the app may follow the launched exe's child (CustomApp.HandOffTarget).</summary>
     public bool CustomAppFollowChildren { get; set; }
     public bool CustomAppHandedOff { get; set; }
-    public nint CachedXboxHandle { get; set; }
     public bool BigPictureWatchActive { get; set; }
     public bool AudioWatchComplete { get; set; }
     public bool HdrApplied { get; set; }

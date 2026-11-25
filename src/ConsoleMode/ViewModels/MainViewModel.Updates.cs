@@ -20,7 +20,6 @@ public partial class MainViewModel
     [ObservableProperty] private bool _homeButtonShortPress;
     [ObservableProperty] private bool _autoStartOnController;
     [ObservableProperty] private bool _interfaceSounds = true;
-    [ObservableProperty] private bool _closeSteamOnRestore = true;
     [ObservableProperty] private bool _restoreDesktopIcons = true;
     [ObservableProperty] private bool _hideDesktopIcons;
     [ObservableProperty] private bool _parkPointer = true;
@@ -103,7 +102,6 @@ public partial class MainViewModel
         SaveQuietly();
         if (value && !_applying) UiSounds.Play(UiSound.Confirm);
     }
-    partial void OnCloseSteamOnRestoreChanged(bool value) => SaveQuietly();
     partial void OnRestoreDesktopIconsChanged(bool value) => SaveQuietly();
     partial void OnHideDesktopIconsChanged(bool value) => SaveQuietly();
     partial void OnParkPointerChanged(bool value) => SaveQuietly();

@@ -45,7 +45,6 @@ public sealed partial class ConsoleEngine
         State.HideMonitors = [.. config.HideMonitors];
         State.HideStrategy = config.HideStrategy;
         State.FullscreenMode = config.FullscreenMode;
-        State.CloseSteamOnRestore = config.CloseSteamOnRestore;
         State.AudioDeviceId = config.AudioAutoSwitch ? null : config.AudioDeviceId;
         State.AudioAutoSwitch = config.AudioAutoSwitch;
         State.AudioDeviceHint = config.AudioDeviceName;
@@ -68,7 +67,6 @@ public sealed partial class ConsoleEngine
         State.CustomAppLaunchPid = null;
         State.CustomAppFollowChildren = false;
         State.CustomAppHandedOff = false;
-        State.CachedXboxHandle = 0;
         State.AudioWatchComplete = false;
         State.BigPictureWatchActive = false;
         OnUi(NativeWindows.StopBigPictureExitWatch);
@@ -213,14 +211,6 @@ public sealed partial class ConsoleEngine
 
         switch (config.FullscreenMode)
         {
-            case "bigPicture":
-                Thread.Sleep(400);
-                Monitors.UpdateFocusRect(config.FocusMonitor, State, true);
-                Launch.StartBigPicture();
-                break;
-            case "xboxMode":
-                Launch.StartXbox();
-                break;
             case "playnite":
                 Thread.Sleep(400);
                 Monitors.UpdateFocusRect(config.FocusMonitor, State, true);
@@ -249,13 +239,6 @@ public sealed partial class ConsoleEngine
         if (State.ShouldExit) return "exit";
 
         var mode = State.FullscreenMode;
-        if (mode == "xboxMode")
-        {
-            TickAudio();
-            TickPointer();
-            return "running";
-        }
-
         if (mode == CustomApp.Mode)
         {
             if (IsCustomAppExit()) return "exit";
@@ -323,7 +306,6 @@ public sealed partial class ConsoleEngine
 
     public int PollDelayMs()
     {
-        if (State.FullscreenMode == "xboxMode") return 5000;
         if (!State.HasAppeared) return 1500;
         if (AudioWatchNeeded()) return 4000;
         return 2000;
@@ -342,7 +324,6 @@ public sealed partial class ConsoleEngine
         AppLog.Write("Stop-ConsoleMode: iniciando restauração");
         try
         {
-            CloseSteamForRestore();
             ReturnJoyChromiumToWindow();
             OnUi(BlackCurtain.Close);
             Video.RestoreHdr(State);
@@ -408,7 +389,6 @@ public sealed partial class ConsoleEngine
             State.CustomAppLaunchPid = null;
             State.CustomAppFollowChildren = false;
             State.CustomAppHandedOff = false;
-            State.CachedXboxHandle = 0;
             State.AudioWatchComplete = false;
             State.BigPictureWatchActive = false;
             State.HdrApplied = false;
@@ -431,15 +411,12 @@ public sealed partial class ConsoleEngine
     /// </summary>
     /// <summary>
     /// "Park the pointer" (issue #172): once the launcher is up, moves the mouse pointer to the bottom-right corner of
-    /// the game screen, twice (Steam and others recenter it while their window opens). Xbox mode has no window to
-    /// watch, so it goes by the time since the launch. Based on @JarJarShinks' version in #173.
+    /// the game screen, twice (launchers recenter it while their window opens). Based on @JarJarShinks' version in #173.
     /// </summary>
     private void TickPointer()
     {
         var now = DateTime.Now;
-        var ready = State.FullscreenMode == "xboxMode"
-            ? State.LaunchTime is { } launched && now - launched >= PointerParking.XboxDelay
-            : State.HasAppeared;
+        var ready = State.HasAppeared;
         if (!PointerParking.IsDue(State.ParkPointer, State.PointerParks, ready, State.LastPointerPark, now)) return;
 
         var rect = State.FocusMonitorRect
@@ -477,27 +454,6 @@ public sealed partial class ConsoleEngine
         }
         AppLog.Write($"Ícones da área de trabalho: {total} reposicionados");
     });
-
-    /// <summary>
-    /// Going back to the PC closes Big Picture and Steam's client window to the tray; the process remains running.
-    /// </summary>
-    private void CloseSteamForRestore()
-    {
-        if (State.FullscreenMode != "bigPicture") return;
-        try
-        {
-            var closed = Launch.CloseBigPicture(State);
-            AppLog.Write($"Steam: Big Picture {(closed ? "fechado" : "ainda aberto")}");
-            var appId = SteamSession.RunningAppId();
-            var decision = SteamShutdown.Decide(State.FullscreenMode, State.CloseSteamOnRestore, SteamSession.IsRunning(), appId);
-            AppLog.Write(SteamShutdown.Describe(decision, appId));
-            if (decision == SteamShutdown.Decision.CloseToTray) SteamSession.CloseWindowToTray();
-        }
-        catch (Exception ex)
-        {
-            AppLog.Write($"Steam: fechar ao voltar: {ex.Message}");
-        }
-    }
 
     /// <summary>Going back to the PC with JoyChromium (opened from the session menu) still open: it leaves full screen and stays as a window, tabs and all.</summary>
     private void ReturnJoyChromiumToWindow()
@@ -555,8 +511,6 @@ public sealed partial class ConsoleEngine
         State.PointerBefore = journal.PointerBefore;
         // It was parked before the crash, or may have been: put it back if its old spot is on a screen again.
         State.PointerParks = journal.PointerBefore is null ? 0 : 1;
-        // Steam is left as it is; only Big Picture (if still open) is closed with the screens coming back.
-        State.CloseSteamOnRestore = false;
         State.IsActive = true;
         Stop();
         return true;

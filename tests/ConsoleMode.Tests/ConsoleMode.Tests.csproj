@@ -51,7 +51,6 @@
     <Compile Include="../../src/ConsoleMode/Services/UiScale.cs" Link="UiScale.cs" />
     <Compile Include="../../src/ConsoleMode/Services/ControlFsLocator.cs" Link="ControlFsLocator.cs" />
     <Compile Include="../../src/ConsoleMode/Services/ControlFsRelease.cs" Link="ControlFsRelease.cs" />
-    <Compile Include="../../src/ConsoleMode/Services/SteamShutdown.cs" Link="SteamShutdown.cs" />
     <Compile Include="../../src/ConsoleMode/Services/LaunchArt.cs" Link="LaunchArt.cs" />
     <Compile Include="../../src/ConsoleMode/Services/DiagnosticsReport.cs" Link="DiagnosticsReport.cs" />
     <Compile Include="../../src/ConsoleMode/Services/DesktopIconLayout.cs" Link="DesktopIconLayout.cs" />

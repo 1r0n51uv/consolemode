@@ -66,16 +66,15 @@ public partial class MainViewModel : ObservableObject
     public bool HasSelectedMonitor => SelectedMonitor is not null;
     public bool HasFocusRow => FocusRow is not null;
     public bool IsIdle => !IsConsoleActive;
-    public bool CanStart => HasMonitors && FocusRow is not null && !IsLoading && !IsStarting && !IsConsoleActive;
+    public bool CanStart => HasMonitors && FocusRow is not null && SelectedLaunch is not null && !IsLoading && !IsStarting && !IsConsoleActive;
     public bool ShowTiles => HasMonitors && !IsConsoleActive;
     public bool ShowEmpty => !HasMonitors && !IsLoading && !IsConsoleActive;
     public string StartButtonText => LocalizationService.Get(IsStarting ? "StartEntering" : "StartNow");
     public string LaunchDescription => SelectedLaunch?.Value switch
     {
         "playnite" => LocalizationService.Get("LaunchPlayniteDescription"),
-        "xboxMode" => LocalizationService.Get("LaunchXboxDescription"),
         var custom when CustomApp.IsEntryMode(custom) => LocalizationService.Get("LaunchCustomAppDescription"),
-        _ => LocalizationService.Get("LaunchSteamDescription")
+        _ => ""
     };
     public string FocusModeDescription => FocusRow is null
         ? LocalizationService.Get("FocusChoose")
@@ -156,7 +155,7 @@ public partial class MainViewModel : ObservableObject
     private void BuildLocalizedOptions()
     {
         var hideValue = SelectedHideStrategy?.Value ?? "disconnect";
-        var launchValue = SelectedLaunch?.Value ?? "bigPicture";
+        var launchValue = SelectedLaunch?.Value ?? "playnite";
         var audioValue = SelectedAudio?.Value ?? "";
         var wasApplying = _applying;
         _applying = true;
@@ -191,19 +190,17 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     private void RebuildLaunchOptions(string? select = null)
     {
-        var value = select ?? SelectedLaunch?.Value ?? "bigPicture";
+        var value = select ?? SelectedLaunch?.Value ?? "playnite";
         var wasApplying = _applying;
         _applying = true;
         try
         {
             LaunchOptions.Clear();
-            LaunchOptions.Add(new ComboOption { Text = LocalizationService.Get("LaunchSteam"), Value = "bigPicture" });
             if (IsPlayniteAvailable)
                 LaunchOptions.Add(new ComboOption { Text = LocalizationService.Get("LaunchPlaynite"), Value = "playnite" });
-            LaunchOptions.Add(new ComboOption { Text = LocalizationService.Get("LaunchXbox"), Value = "xboxMode" });
             foreach (var app in _customApps)
                 LaunchOptions.Add(new ComboOption { Text = LaunchService.GetCustomAppName(app.Path), Value = CustomApp.EntryMode(app.Id) });
-            SelectedLaunch = LaunchOptions.FirstOrDefault(x => x.Value == value) ?? LaunchOptions[0];
+            SelectedLaunch = LaunchOptions.FirstOrDefault(x => x.Value == value) ?? LaunchOptions.FirstOrDefault();
             RebuildLaunchTiles();
         }
         finally
@@ -334,7 +331,6 @@ public partial class MainViewModel : ObservableObject
             ConsoleBackgroundMode = ConsoleBackgroundService.NormalizeMode(config.ConsoleBackground);
             ConsoleBackgroundImage = config.ConsoleBackgroundImage ?? "";
             GlassMaterial = CardMaterial.Normalize(config.CardMaterial);
-            CloseSteamOnRestore = config.CloseSteamOnRestore;
             RestoreDesktopIcons = config.RestoreDesktopIcons;
             HideDesktopIcons = config.HideDesktopIcons;
             ParkPointer = config.ParkPointer;
@@ -540,6 +536,7 @@ public partial class MainViewModel : ObservableObject
     {
         OnCustomAppPicked(value?.Value);
         OnPropertyChanged(nameof(LaunchDescription));
+        OnPropertyChanged(nameof(CanStart));
         OnPropertyChanged(nameof(AmbientColor));
         OnPropertyChanged(nameof(AmbientFade));
         SyncLaunchTiles();
@@ -842,7 +839,7 @@ public partial class MainViewModel : ObservableObject
             MonitorModes = new Dictionary<string, SavedDisplayMode>(_loadedConfig.MonitorModes, StringComparer.OrdinalIgnoreCase),
             HideStrategy = SelectedHideStrategy?.Value ?? "disconnect",
             // The engine knows one "customApp" mode: the selected app's values go in the CustomApp* fields.
-            FullscreenMode = CustomApp.IsEntryMode(SelectedLaunch?.Value) ? CustomApp.Mode : SelectedLaunch?.Value ?? "bigPicture",
+            FullscreenMode = CustomApp.IsEntryMode(SelectedLaunch?.Value) ? CustomApp.Mode : SelectedLaunch?.Value ?? "playnite",
             CustomApps = CustomAppsToSave(),
             CustomAppId = _customAppId,
             PlaynitePath = PlaynitePath,
@@ -877,7 +874,6 @@ public partial class MainViewModel : ObservableObject
             ConsoleBackground = ConsoleBackgroundMode,
             ConsoleBackgroundImage = ConsoleBackgroundImage,
             CardMaterial = CardMaterial.Normalize(GlassMaterial),
-            CloseSteamOnRestore = CloseSteamOnRestore,
             RestoreDesktopIcons = RestoreDesktopIcons,
             HideDesktopIcons = HideDesktopIcons,
             ParkPointer = ParkPointer,
@@ -961,9 +957,8 @@ public partial class MainViewModel : ObservableObject
     private static string DescribeActive(AppConfig config) => config.FullscreenMode switch
     {
         "playnite" => LocalizationService.Get("ActivePlaynite"),
-        "xboxMode" => LocalizationService.Get("ActiveXbox"),
         CustomApp.Mode => LocalizationService.Get("ActiveCustomApp", LaunchService.GetCustomAppName(config.CustomAppPath)),
-        _ => LocalizationService.Get("ActiveSteam")
+        _ => ""
     };
 
     private void SetStatus(string text, InfoBarSeverity severity = InfoBarSeverity.Informational)

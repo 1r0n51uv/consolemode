@@ -19,7 +19,7 @@ public sealed partial class LaunchTile : ObservableObject
     public string Text => Option.Text;
     public string Glyph { get; init; } = "";
     public Brush Background { get; init; } = null!;
-    /// <summary>The launcher's own logo (Steam's, Playnite's, the Xbox app's, the custom app's); until then, or without it, the glyph.</summary>
+    /// <summary>The launcher's own logo (Playnite's, the custom app's); until then, or without it, the glyph.</summary>
     [ObservableProperty, NotifyPropertyChangedFor(nameof(HasLogo), nameof(ShowGlyph))] private ImageSource? _logo;
     public bool HasLogo => Logo is not null;
     /// <summary>The app whose logo this tile is waiting for (exe path or Store app id).</summary>
@@ -134,9 +134,7 @@ public partial class MainViewModel
         var custom = CustomApp.EntryId(tile.Option.Value) is { } id ? _customApps.FirstOrDefault(a => a.Id == id) : null;
         var (exe, appId) = tile.Option.Value switch
         {
-            "bigPicture" => (SteamSession.FindSteamExe(), (string?)null),
-            "playnite" => (Engine.Launch.GetPlaynitePath(), null),
-            "xboxMode" => (null, LaunchArt.XboxAppId),
+            "playnite" => (Engine.Launch.GetPlaynitePath(), (string?)null),
             _ when custom is not null => (CustomApp.CleanPath(custom.Path), null),
             _ => (null, null)
         };

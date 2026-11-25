@@ -220,8 +220,6 @@ public sealed class LocalizedStrings : INotifyPropertyChanged
     public string ExitShortcutDescription => LocalizationService.Get(nameof(ExitShortcutDescription));
     public string HomeButtonDescription => LocalizationService.Get(nameof(HomeButtonDescription));
     public string HomeButtonShortPressCard => LocalizationService.Get(nameof(HomeButtonShortPressCard));
-    public string CloseSteamCard => LocalizationService.Get(nameof(CloseSteamCard));
-    public string CloseSteamDescription => LocalizationService.Get(nameof(CloseSteamDescription));
     public string RestoreIconsCard => LocalizationService.Get(nameof(RestoreIconsCard));
     public string RestoreIconsDescription => LocalizationService.Get(nameof(RestoreIconsDescription));
     public string HideIconsCard => LocalizationService.Get(nameof(HideIconsCard));
