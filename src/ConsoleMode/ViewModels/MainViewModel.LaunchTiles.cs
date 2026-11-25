@@ -13,7 +13,8 @@ namespace ConsoleMode.ViewModels;
 /// <summary>One launcher in the console Home row (Steam, Playnite, Xbox, custom app).</summary>
 public sealed partial class LaunchTile : ObservableObject
 {
-    public required ComboOption Option { get; init; }
+    // Not "required": the XAML type info makes one with new() now that a control has a LaunchTile property.
+    public ComboOption Option { get; init; } = null!;
     /// <summary>The "+" tile after the launchers: A on it adds a custom app; the focus on it picks nothing.</summary>
     public bool IsAdd { get; init; }
     public string Text => Option.Text;
