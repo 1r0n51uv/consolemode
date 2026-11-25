@@ -157,7 +157,6 @@
   "BetaUpdatesDescription": "Ricevi le versioni in anteprima prima di tutti per aiutare a provarle. Possono contenere bug. Disattivando questa opzione non si torna alla versione stabile: riceverai la prossima stabile quando uscirà.",
   "BetaUpdatesWarning": "Le versioni di prova possono dare problemi su alcune configurazioni. Se qualcosa non va, scarica la versione stabile dalla pagina delle release e segnalacelo con il pulsante del feedback.",
   "HelpDataSection": "Scorciatoia, aiuto e dati",
-  "OtherAppsSection": "Altre app dello sviluppatore",
   "TvConfirmationCard": "Conferma sulla TV",
   "TvConfirmationDescription": "La prima volta che usi un nuovo schermo da gioco, la TV ti chiede di confermare che vedi l'immagine. Rispondi con mouse, tastiera o controller (Xbox: A/B · PlayStation: ✕/○). Provalo qui senza modificare i tuoi schermi.",
   "ControllerTestCard": "Prova il controller",
@@ -352,10 +351,4 @@
   "RemoveCustomAppDescription": "Toglie il riquadro di questa app dalla Home; si apre invece Steam Big Picture.",
   "RemoveFromHome": "Rimuovi dalla Home",
   "Cancel": "Annulla",
-  "OtherAppsControlFsDescription": "Un gestore di file pensato prima di tutto per il controller, con un estrattore ZIP sicuro.",
-  "OtherAppsTakoDescription": "La tua libreria di giochi in un launcher fatto per la TV e il controller.",
-  "OtherAppsJoyChromiumDescription": "Un browser web per la TV, da usare con il controller dal divano.",
-  "OtherAppsStageAlpha": "Alpha",
-  "OtherAppsStageClosedAlpha": "Alpha chiusa",
-  "OtherAppsStageBeta": "Beta"
 }

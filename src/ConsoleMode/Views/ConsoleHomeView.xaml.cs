@@ -392,7 +392,6 @@ public sealed partial class ConsoleHomeView : UserControl
             "home" => HomeShortcutRow,
             "menu" => MenuShortcutRow,
             "exit" => ExitShortcutRow,
-            "taskview" => TaskViewShortcutRow,
             _ => null
         };
         if (ViewModel.IsSystemTab && row?.Focus(FocusState.Keyboard) == true) return;
@@ -408,8 +407,7 @@ public sealed partial class ConsoleHomeView : UserControl
         2 => SystemSection2,
         3 => SystemSection3,
         4 => SystemSection4,
-        5 => SystemSection5,
-        _ => SystemSection6
+        _ => SystemSection5
     };
 
     private void FocusSystemCategory()

@@ -157,7 +157,6 @@
   "BetaUpdatesDescription": "Get early versions before everyone else to help test them. They can have bugs. Turning this off doesn't go back to the stable version: you'll get the next stable one when it comes out.",
   "BetaUpdatesWarning": "Test versions can fail on some setups. If something breaks, download the stable version from the releases page and tell us with the feedback button.",
   "HelpDataSection": "Shortcut, help, and data",
-  "OtherAppsSection": "More apps from the developer",
   "TvConfirmationCard": "TV confirmation",
   "TvConfirmationDescription": "The first time you use a new gaming display, the TV asks you to confirm that you can see the image. Respond with a mouse, keyboard, or controller (Xbox: A/B · PlayStation: ✕/○). Test it here without changing your displays.",
   "ControllerTestCard": "Test controller",
@@ -352,10 +351,4 @@
   "RemoveCustomAppDescription": "Takes this app's tile off Home; Steam Big Picture opens instead.",
   "RemoveFromHome": "Remove from Home",
   "Cancel": "Cancel",
-  "OtherAppsControlFsDescription": "A controller-first file manager, with a safe ZIP extractor.",
-  "OtherAppsTakoDescription": "Your game library in a launcher made for the TV and the controller.",
-  "OtherAppsJoyChromiumDescription": "A web browser for the TV, driven with a controller from the couch.",
-  "OtherAppsStageAlpha": "Alpha",
-  "OtherAppsStageClosedAlpha": "Closed alpha",
-  "OtherAppsStageBeta": "Beta"
 }
