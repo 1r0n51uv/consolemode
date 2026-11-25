@@ -12,7 +12,7 @@ https://github.com/user-attachments/assets/9f244c06-76e5-4ccb-ab66-e637eae900ec
 
 ## Download
 
-Get **[1.7.1](https://github.com/lippdev/consolemode/releases/tag/v1.7.1)**, the latest stable version:
+Get the latest version from the **[releases page](https://github.com/1r0n51uv/consolemode/releases/latest)**:
 
 - **`ConsoleMode-Setup-x64.exe`** (recommended): per-user install, no admin, updates itself.
 - **`ConsoleMode-Portable-x64.exe`**: a single exe that keeps its data next to it.
@@ -48,7 +48,7 @@ You pick the controller shortcuts yourself: none is on at first, the tour the ap
 - Hides the **desktop icons** during a session if you enable the option and restores their previous visibility when you return to the PC
 - Launches **Playnite fullscreen** or an app of your own
 - **Session menu** over the game: switch or close the open windows, change volume, resolution, audio and HDR, hide the mouse pointer or drive it with the controller, and browse your files with [ControlFS](https://github.com/nextestudios/ControlFS) and the web with [JoyChromium](https://github.com/lippdev/joychromium)
-- A console-style interface made for the TV that also works with the mouse and the keyboard (full screen, Xbox and PlayStation pads, LB/RB tabs, its own wallpaper or your Steam covers as the background), with a guided tour the first time you open it
+- A console-style interface made for the TV that also works with the mouse and the keyboard (full screen, Xbox and PlayStation pads, a dock of expanding glass cards, its own wallpaper or your Steam covers as the background), with a guided tour the first time you open it
 - **Your own apps** as launchers: any `.exe` (RetroArch, another launcher…) becomes a tile on Home
 - Puts the **desktop icons** and the **mouse pointer** back where they were, can let the controller **wake the PC**, and restores the desk on the next start if a session was cut short
 - English, Portuguese, Spanish, German, French, Italian and Russian

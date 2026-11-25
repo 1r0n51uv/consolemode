@@ -12,7 +12,7 @@ https://github.com/user-attachments/assets/9f244c06-76e5-4ccb-ab66-e637eae900ec
 
 ## Download
 
-Baixe a **[1.7.1](https://github.com/lippdev/consolemode/releases/tag/v1.7.1)**, a versão estável mais recente:
+Baixe a versão mais recente da **[página de releases](https://github.com/1r0n51uv/consolemode/releases/latest)**:
 
 - **`ConsoleMode-Setup-x64.exe`** (recomendado): instala por usuário, sem admin, e se atualiza sozinho.
 - **`ConsoleMode-Portable-x64.exe`**: um único exe que guarda os dados ao lado dele.
@@ -48,7 +48,7 @@ Os atalhos do controle são você quem escolhe: nenhum vem ligado, o tour da pri
 - Oculta os **ícones da área de trabalho** durante a sessão se você ativar a opção e restaura a visibilidade anterior ao voltar ao PC
 - Abre o **Playnite em tela cheia** ou um aplicativo seu
 - **Menu da sessão** sobre o jogo: troque ou feche as janelas abertas, mude volume, resolução, áudio e HDR, esconda o cursor do mouse ou mova-o com o controle e navegue pelos seus arquivos com o [ControlFS](https://github.com/nextestudios/ControlFS) e pela web com o [JoyChromium](https://github.com/lippdev/joychromium)
-- Uma interface no estilo dos consoles, feita para a TV, que também funciona com mouse e teclado (tela cheia, controles Xbox e PlayStation, abas no LB/RB, um papel de parede próprio ou as capas da sua Steam como plano de fundo), com um tour guiado na primeira vez que você abre
+- Uma interface no estilo dos consoles, feita para a TV, que também funciona com mouse e teclado (tela cheia, controles Xbox e PlayStation, um dock de blocos de vidro que se expandem, um papel de parede próprio ou as capas da sua Steam como plano de fundo), com um tour guiado na primeira vez que você abre
 - **Seus aplicativos** como iniciadores: qualquer `.exe` (RetroArch, outro launcher…) vira um bloco no Início
 - Devolve os **ícones da área de trabalho** e o **ponteiro do mouse** ao lugar, pode deixar o controle **acordar o PC** e restaura a mesa na próxima abertura se uma sessão for interrompida
 - Português, inglês, espanhol, alemão, francês, italiano e russo
