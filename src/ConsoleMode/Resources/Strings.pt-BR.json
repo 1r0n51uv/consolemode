@@ -336,6 +336,9 @@
   "AddCustomAppDescription": "Escolha um .exe: ele vira um bloco no Início, com o ícone e o nome do programa.",
   "RemoveCustomAppCard": "Remover este aplicativo",
   "RemoveCustomAppDescription": "Tira o bloco deste aplicativo do Início; o primeiro iniciador que sobrar passa a abrir no lugar.",
+  "TileMenuCardImage": "Imagem do bloco…",
+  "TileMenuBackgroundImage": "Imagem de fundo…",
+  "TileMenuClearImages": "Remover as imagens",
   "RemoveFromHome": "Remover da Início",
   "Cancel": "Cancelar"
 }

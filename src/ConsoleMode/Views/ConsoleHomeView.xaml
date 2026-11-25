@@ -117,6 +117,9 @@
             </Grid>
             <Image Source="{x:Bind ViewModel.BackgroundCustomImage, Mode=OneWay}" Stretch="UniformToFill" Opacity="0.7"
                    Visibility="{x:Bind ViewModel.ShowBackgroundCustom, Mode=OneWay}"/>
+            <!-- The background of the card in focus, over the usual one (fades in and out) -->
+            <Image Source="{x:Bind ViewModel.AmbientBackground, Mode=OneWay}" Stretch="UniformToFill" IsHitTestVisible="False"
+                   Opacity="{x:Bind ViewModel.ShownOpacity(ViewModel.HasAmbientBackground), Mode=OneWay}" OpacityTransition="{StaticResource ConsoleFade}"/>
             <!-- The selected launcher tints the background like the cover of a game on a console home -->
             <Rectangle IsHitTestVisible="False">
                 <Rectangle.Fill>

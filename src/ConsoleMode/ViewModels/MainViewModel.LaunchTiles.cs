@@ -107,6 +107,8 @@ public partial class MainViewModel
             IsSettings = true
         });
         foreach (var tile in LaunchTiles.Where(t => t.IsLauncher)) _ = LoadLaunchLogoAsync(tile);
+        AmbientTile = null;
+        ApplyLaunchImages();
     }
 
     /// <summary>Read at this size (pixels), enough for a 4K TV; each tile then gets it shrunk to what it draws.</summary>
@@ -233,11 +235,7 @@ public partial class MainViewModel
     /// <summary>The card the focus or the pointer is on: its colour tints the background and the glass.</summary>
     [ObservableProperty] private LaunchTile? _ambientTile;
 
-    partial void OnAmbientTileChanged(LaunchTile? value)
-    {
-        OnPropertyChanged(nameof(AmbientColor));
-        OnPropertyChanged(nameof(AmbientFade));
-    }
+    partial void OnAmbientTileChanged(LaunchTile? value) => NotifyAmbient();
 
     private void UpdateHomeMeta()
     {
@@ -252,7 +250,7 @@ public partial class MainViewModel
 
     private Windows.UI.Color Tint(byte alpha)
     {
-        var tile = AmbientTile ?? LaunchTiles.FirstOrDefault(t => t.IsSelected);
+        var tile = CurrentAmbientTile;
         var color = tile?.Accent ?? Argb(LaunchArt.For(SelectedLaunch?.Value).From);
         return Microsoft.UI.ColorHelper.FromArgb(alpha, color.R, color.G, color.B);
     }

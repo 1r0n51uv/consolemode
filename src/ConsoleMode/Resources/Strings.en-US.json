@@ -336,6 +336,9 @@
   "AddCustomAppDescription": "Pick an .exe: it becomes a tile on Home, with the program's icon and name.",
   "RemoveCustomAppCard": "Remove this app",
   "RemoveCustomAppDescription": "Takes this app's tile off Home; the first launcher left opens instead.",
+  "TileMenuCardImage": "Card picture…",
+  "TileMenuBackgroundImage": "Background picture…",
+  "TileMenuClearImages": "Remove the pictures",
   "RemoveFromHome": "Remove from Home",
   "Cancel": "Cancel"
 }

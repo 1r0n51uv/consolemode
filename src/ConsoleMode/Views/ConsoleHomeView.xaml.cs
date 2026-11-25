@@ -67,9 +67,28 @@ public sealed partial class ConsoleHomeView : UserControl
         // The release reaches the row after the tile has handled it (and raised Click), so the flag covers that click only.
         // The sounds are the pad's (GamepadNavigator, LB / RB): mouse clicks stay silent.
         ViewModel.PropertyChanged += OnViewModelChanged;
-        ApplyCardMaterial(ViewModel.GlassMaterial);
+        ApplyCardMaterial(ViewModel.GlassMaterial, ViewModel.AmbientColor);
+        ViewModel.PickLaunchImageRequested += (tile, kind) => _ = PickLaunchImageAsync(tile, kind);
         if (ViewModel.IsIntroShowing) ShowIntro();
         ViewModel.PickBackgroundImageRequested += () => _ = PickBackgroundImageAsync();
+    }
+
+    /// <summary>A picture for a card or its background, from the file picker.</summary>
+    private async Task PickLaunchImageAsync(LaunchTile tile, string kind)
+    {
+        try
+        {
+            if (App.MainWindowInstance is not { } window) return;
+            var picker = new Windows.Storage.Pickers.FileOpenPicker { SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary };
+            foreach (var extension in new[] { ".jpg", ".jpeg", ".png", ".bmp", ".webp" }) picker.FileTypeFilter.Add(extension);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(window));
+            var file = await picker.PickSingleFileAsync();
+            if (file is not null) ViewModel.SetLaunchImage(tile, kind, file.Path);
+        }
+        catch (Exception ex)
+        {
+            AppLog.Write($"Início: seletor de imagem do bloco: {ex.Message}");
+        }
     }
 
     /// <summary>"My own image": the system file picker (needs the window handle in WinUI 3).</summary>
@@ -150,7 +169,8 @@ public sealed partial class ConsoleHomeView : UserControl
         switch (e.PropertyName)
         {
             case nameof(MainViewModel.GlassMaterial):
-                ApplyCardMaterial(ViewModel.GlassMaterial);
+            case nameof(MainViewModel.AmbientColor):
+                ApplyCardMaterial(ViewModel.GlassMaterial, ViewModel.AmbientColor);
                 break;
             case nameof(MainViewModel.IsSystemTab) when ViewModel.IsSystemTab:
                 // Entering System: the list's edges land with it, never a hard cut that then fades.
@@ -1075,10 +1095,11 @@ public sealed partial class ConsoleHomeView : UserControl
     }
 
     /// <summary>Pours the chosen glass into the acrylic every card, row and bar shares.</summary>
-    private static void ApplyCardMaterial(string material)
+    /// <summary>The glass takes some of the colour of the card in focus (all of it for the accent material).</summary>
+    private static void ApplyCardMaterial(string material, Windows.UI.Color cardColor)
     {
         if (Application.Current.Resources["GlassFill"] is not Microsoft.UI.Xaml.Media.AcrylicBrush brush) return;
-        var (tint, opacity, luminosity) = CardMaterial.Look(material);
+        var (tint, opacity, luminosity) = CardMaterial.Look(material, 0xFF000000u | ((uint)cardColor.R << 16) | ((uint)cardColor.G << 8) | cardColor.B);
         brush.TintColor = Windows.UI.Color.FromArgb(0xFF, (byte)(tint >> 16), (byte)(tint >> 8), (byte)tint);
         brush.TintOpacity = opacity;
         brush.TintLuminosityOpacity = luminosity;

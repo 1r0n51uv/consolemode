@@ -336,6 +336,9 @@
   "AddCustomAppDescription": "Scegli un .exe: diventa un riquadro nella Home, con l'icona e il nome del programma.",
   "RemoveCustomAppCard": "Rimuovi questa app",
   "RemoveCustomAppDescription": "Toglie il riquadro di questa app dalla Home; si apre invece il primo launcher rimasto.",
+  "TileMenuCardImage": "Immagine della card…",
+  "TileMenuBackgroundImage": "Immagine di sfondo…",
+  "TileMenuClearImages": "Rimuovi le immagini",
   "RemoveFromHome": "Rimuovi dalla Home",
   "Cancel": "Annulla"
 }
