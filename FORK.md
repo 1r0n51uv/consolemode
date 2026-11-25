@@ -1,42 +1,53 @@
 # Fork notes
 
-This is a fork of [lippdev/consolemode](https://github.com/lippdev/consolemode). The dojo's
-`keeper` agent (see `1r0n51uv/ron1n-dojo`, FLOW-013) reads this file every time upstream publishes a
-release, merges it here and opens a PR from `sync/vX`. Keep it current: it is what the agent knows
-about what we changed.
+This is a fork of [lippdev/consolemode](https://github.com/lippdev/consolemode) that has become its own
+product (the "lean" edition): fewer features, a new interface. Changes and releases happen **here**, never
+upstream. Upstream is only a source of ideas.
 
-## Lean edition (branch `alt/lean`)
+The dojo's `keeper` agent (see `1r0n51uv/ron1n-dojo`, FLOW-013, `forks/consolemode.yaml` with `mode: review`)
+acts **only when upstream publishes a new release**. It merges nothing: it opens a PR from `upstream/<tag>`
+with one file, `docs/upstream/<tag>.md`, that sorts every upstream change into **bring**, **rewrite**,
+**skip** or **unclear**, using the two tables below. 1ron51uv decides; the chosen work is then done in
+separate PRs. Keep the tables current: they are what the agent measures against.
 
-This branch deliberately diverges from upstream and is **not** part of the keeper's sync flow. It removes
-TV control, RTSS (FPS limit and counter), per-game profiles, the local control API, `consolemode://` links,
-DDC/CI power-off and the es/de/fr/ru catalogs, and is meant to be redesigned further. Merging upstream into it
-will conflict heavily; do it by hand, not with the keeper.
+## Removed (upstream changes here are skipped, unless 1ron51uv asks otherwise)
 
-## What we changed
+| What | Where it lived |
+|---|---|
+| TV control (Google TV / Android TV, Wake-on-LAN, HDMI input, standby on restore) | `Services/Tv/`, `MainViewModel.Tv.cs`, the TV settings tab, `TvControlConfig` |
+| RTSS: FPS limit and FPS counter | `Services/RtssService.cs`, `RtssOverlay.cs`, `HardwareMonitor.cs`, `HardwareStats.cs`, `MainViewModel.FpsOverlay.cs`, `rtss-cli` |
+| Per-game profiles | `Services/GameProfiles.cs`, `ConsoleEngine.GameProfiles.cs`, `MainViewModel.GameProfiles.cs` |
+| Local control API and `consolemode://` links | `Services/ControlPipeService.cs`, `ControlProtocol.cs`, `ProtocolService.cs` |
+| DDC/CI panel power-off | `NativeDisplays.SetPower`, `MonitorService.DisableDdc`, the "turn off the panel" hide strategy |
+| Languages es-ES, de-DE, fr-FR, ru-RU | `Resources/Strings.<code>.json`, their READMEs and guides, installer entries |
 
-- **Italian**: `src/ConsoleMode/Resources/Strings.it-IT.json` (a catalog with every key of
-  `Strings.en-US.json`), its wiring (`ConsoleMode.csproj`, `Tests.csproj`, `LocalizationService.cs`,
-  `LocalizationTests.cs`, `build/ConsoleMode.iss`), `README.it-IT.md`, the language line of the other
-  READMEs, `docs/TESTING.md` and `docs/TRANSLATING.md`.
-- **Updates and links point at the fork**: `UpdateService.Repository`, the changelog link in
-  `release.yml`, the installer URLs in `build/ConsoleMode.iss`. Never take upstream's value here.
-- **Fork automation**: `.github/workflows/fork-sync.yml`, `.github/scripts/fork-sync.sh`, this file.
-  `winget.yml`/`release.yml`'s winget job stay off (no `WINGET_TOKEN`).
+## Rewritten (upstream changes here need the idea redone in our style)
 
-## Rules for a sync
+| What | Where | How it is now |
+|---|---|---|
+| The whole look: liquid glass over a PS5-style home | `App.xaml` (glass resources, `ConsoleSurfaceTemplate`, `ConsoleFlatTemplate`, styles), `Views/ConsoleHomeView.xaml(.cs)`, `SessionMenuWindow.xaml` | Acrylic fill + lit edge, glass top bar with the tabs in a capsule, spring lift on focus, ambient tint of the selected launcher, `CardMaterial` (System → App → Glass) |
+| System tab categories | `ConsoleHomeView.xaml` (`SystemSection0..6`) | One category fewer than upstream (TV removed): indexes shift, so upstream's category numbers do not apply |
+| Session menu rows | `SessionMenuWindow.xaml`, `MainViewModel.SessionMenu.cs` | No FPS, counter or profile rows; the tour has no FPS stop |
 
-1. Branch `sync/v<upstream version>` from `main`, then merge the upstream **tag** (`git merge v<X>`),
-   never a squash: the history must keep upstream's commits.
-2. On a conflict, keep upstream's code and re-apply our changes above on top.
-3. Every key upstream added to `Strings.en-US.json` goes into `Strings.it-IT.json`, translated
-   (the localization tests fail on a missing key, a wrong `{0}` or an untranslated sentence). Run
-   `dotnet test tests/ConsoleMode.Tests/ConsoleMode.Tests.csproj` (in a `mcr.microsoft.com/dotnet/sdk:8.0`
-   container when `dotnet` is missing).
-4. **Version**: the fork's version is the higher of upstream's and ours; if ours is higher or equal,
-   ours +1 patch. Set it in `src/ConsoleMode/ConsoleMode.csproj`: `Version`, `AssemblyVersion`,
-   `FileVersion` and `InformationalVersion`.
-5. **Changelog**: a `## [<version>]` section in **both** `CHANGELOG.md` (Portuguese) and
-   `CHANGELOG.en-US.md`; the release fails without them. Keep upstream's sections, add ours on top.
-6. Anything beyond the Italian catalog, `README.it-IT.md`, the changelogs and the version lines
-   makes the PR "not clean": it waits for the owner (`needs-review`).
-7. Never push to `main`, never merge: `fork-sync.yml` decides, with fixed rules, after the CI is green.
+Anything else is "bring" if it merges cleanly (`git merge-tree`) and does not touch the above.
+
+## What else we changed
+
+- **Italian**: `src/ConsoleMode/Resources/Strings.it-IT.json` (every key of `Strings.en-US.json`),
+  `README.it-IT.md`, and its wiring (`ConsoleMode.csproj`, `Tests.csproj`, `LocalizationService.cs`,
+  `LocalizationTests.cs`, `build/ConsoleMode.iss`). `pt-BR` stays: it is upstream's source language, the
+  fallback and the changelog's. Every new key goes in pt-BR, en-US and it-IT.
+- **Updates and links point at the fork**: `UpdateService.Repository`, the changelog link in `release.yml`,
+  the installer URLs in `build/ConsoleMode.iss`. Never take upstream's value here.
+- **No fork-sync workflow**: nothing merges or releases by itself. `winget.yml` and `release.yml`'s winget
+  job stay off (no `WINGET_TOKEN`).
+
+## Rules for the keeper's review PR
+
+1. Only for a new upstream release, one PR per release, branch `upstream/<tag>`, base `main`.
+2. The only file it adds is `docs/upstream/<tag>.md`: upstream's news, then one table per class
+   (item | file | what it does | proposal). The code, versions, translations and changelogs are not touched.
+3. The base of the comparison is the highest upstream tag before `<tag>` that is an ancestor of `main` or
+   already has an `upstream/<tag>` PR.
+4. The PR gets `needs-review`; it is never merged by the agent. A closed PR is not redone.
+5. Chosen work is done afterwards, on request, in separate PRs (one topic each), in our style.
