@@ -72,6 +72,7 @@ public sealed partial class ConsoleHomeView : UserControl
         LaunchRow.AddHandler(UIElement.PointerCanceledEvent, new PointerEventHandler((_, _) => _launchPointerDown = false), true);
         // The sounds are the pad's (GamepadNavigator, LB / RB): mouse clicks stay silent.
         ViewModel.PropertyChanged += OnViewModelChanged;
+        ApplyCardMaterial(ViewModel.GlassMaterial);
         if (ViewModel.IsIntroShowing) ShowIntro();
         ViewModel.PickBackgroundImageRequested += () => _ = PickBackgroundImageAsync();
     }
@@ -151,6 +152,9 @@ public sealed partial class ConsoleHomeView : UserControl
     {
         switch (e.PropertyName)
         {
+            case nameof(MainViewModel.GlassMaterial):
+                ApplyCardMaterial(ViewModel.GlassMaterial);
+                break;
             case nameof(MainViewModel.IsSystemTab) when ViewModel.IsSystemTab:
                 // Entering System: the list's edges land with it, never a hard cut that then fades.
                 _rowsEdges.Snap();
@@ -405,8 +409,7 @@ public sealed partial class ConsoleHomeView : UserControl
         3 => SystemSection3,
         4 => SystemSection4,
         5 => SystemSection5,
-        6 => SystemSection6,
-        _ => SystemSection7
+        _ => SystemSection6
     };
 
     private void FocusSystemCategory()
@@ -1056,9 +1059,26 @@ public sealed partial class ConsoleHomeView : UserControl
         _launchTileStyle ??= Application.Current.Resources["LaunchTileButton"] as Style;
         if (ReferenceEquals(button.Style, _launchTileStyle)) scale = scale > 1f ? 1.14f : 1f;
         else if (!ReferenceEquals(button.Style, _cardStyle)) return;
-        button.CenterPoint = new Vector3((float)button.ActualWidth / 2, (float)button.ActualHeight / 2, 0);
-        button.ScaleTransition ??= new Vector3Transition { Duration = TimeSpan.FromMilliseconds(140) };
-        button.Scale = new Vector3(scale, scale, 1);
+        var visual = Microsoft.UI.Xaml.Hosting.ElementCompositionPreview.GetElementVisual(button);
+        visual.CenterPoint = new Vector3((float)button.ActualWidth / 2, (float)button.ActualHeight / 2, 0);
+        var target = new Vector3(scale, scale, 1);
+        if (!Ui.AnimationsEnabled) { visual.Scale = target; return; }
+        // A spring, like tvOS: the tile overshoots a little when it lifts and settles when it lets go.
+        var spring = visual.Compositor.CreateSpringVector3Animation();
+        spring.FinalValue = target;
+        spring.DampingRatio = scale > 1f ? 0.55f : 0.85f;
+        spring.Period = TimeSpan.FromMilliseconds(scale > 1f ? 55 : 45);
+        visual.StartAnimation("Scale", spring);
+    }
+
+    /// <summary>Pours the chosen glass into the acrylic every card, row and bar shares.</summary>
+    private static void ApplyCardMaterial(string material)
+    {
+        if (Application.Current.Resources["GlassFill"] is not Microsoft.UI.Xaml.Media.AcrylicBrush brush) return;
+        var (tint, opacity, luminosity) = CardMaterial.Look(material);
+        brush.TintColor = Windows.UI.Color.FromArgb(0xFF, (byte)(tint >> 16), (byte)(tint >> 8), (byte)tint);
+        brush.TintOpacity = opacity;
+        brush.TintLuminosityOpacity = luminosity;
     }
 
     private static Microsoft.UI.Xaml.Input.FocusNavigationDirection? Arrow(VirtualKey key) => key switch

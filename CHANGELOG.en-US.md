@@ -4,9 +4,12 @@ English (US) release notes, mirroring CHANGELOG.md (Brazilian Portuguese). Befor
 
 ## [Unreleased]
 
-## [1.7.2]
+## [1.7.1.1]
 ### What's new
 - Italian language: the app and the installer are now available in Italian.
+- New liquid-glass look, inspired by tvOS and the PS5 home: translucent glass cards, rows and bars with a lit edge, a glass top bar with the tabs in a capsule, a shine and a springy lift on the focused tile, and a glow over the background tinted by the selected launcher. **System → App → Glass** picks the material (dark, light, clear, accent).
+### Changes
+- Lean edition: removed TV control (Google TV / Android TV), the FPS limit and counter (RTSS), per-game profiles, the local control API and `consolemode://` links, DDC/CI panel power-off, and the Spanish, German, French and Russian languages.
 
 ## [1.7.1]
 ### What's new

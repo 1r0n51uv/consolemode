@@ -232,10 +232,10 @@ public static partial class UpdateService
         /// <summary>The first pre-release identifier ("beta" in 1.7.1-beta.2), empty for a stable version.</summary>
         public string PreLabel => _pre.Length > 0 ? _pre[0] : "";
 
-        [GeneratedRegex(@"(\d+)\.(\d+)(?:\.(\d+))?(?:-([0-9A-Za-z.\-]+))?")]
+        [GeneratedRegex(@"(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:-([0-9A-Za-z.\-]+))?")]
         private static partial Regex Pattern();
 
-        public static SemVer Parse(string text) => TryFind(text) ?? new SemVer([0, 0, 0], []);
+        public static SemVer Parse(string text) => TryFind(text) ?? new SemVer([0, 0, 0, 0], []);
 
         public static SemVer? TryFind(string? text)
         {
@@ -246,16 +246,18 @@ public static partial class UpdateService
             {
                 int.Parse(m.Groups[1].Value),
                 int.Parse(m.Groups[2].Value),
-                m.Groups[3].Success ? int.Parse(m.Groups[3].Value) : 0
+                m.Groups[3].Success ? int.Parse(m.Groups[3].Value) : 0,
+                // The fork's own variant: 1.7.1.2 is upstream's 1.7.1 with our second change.
+                m.Groups[4].Success ? int.Parse(m.Groups[4].Value) : 0
             };
-            var pre = m.Groups[4].Success ? m.Groups[4].Value.Split('.') : [];
+            var pre = m.Groups[5].Success ? m.Groups[5].Value.Split('.') : [];
             return new SemVer(core, pre);
         }
 
         public int CompareTo(SemVer? other)
         {
             if (other is null) return 1;
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < 4; i++)
             {
                 var c = _core[i].CompareTo(other._core[i]);
                 if (c != 0) return c;

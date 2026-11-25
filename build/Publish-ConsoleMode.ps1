@@ -32,17 +32,14 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
     $Version = ([xml](Get-Content -LiteralPath $project -Raw)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
 }
 $Version = $Version.TrimStart("v")
-if ($Version -notmatch '^(\d+)\.(\d+)\.(\d+)(-[0-9A-Za-z.\-]+)?$') {
+if ($Version -notmatch '^(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(-[0-9A-Za-z.\-]+)?$') {
     throw "Versao invalida: '$Version' (use 1.2.3 ou 1.2.3-beta.1)"
 }
-$numericVersion = "$($Matches[1]).$($Matches[2]).$($Matches[3]).0"
+$variant = if ($Matches[4]) { $Matches[4] } else { "0" }
+$numericVersion = "$($Matches[1]).$($Matches[2]).$($Matches[3]).$variant"
 Write-Host "Versao: $Version"
 
 New-Item -ItemType Directory -Path $embedDir, $distDir -Force | Out-Null
-
-if (-not $SkipTools) {
-    & (Join-Path $PSScriptRoot "Get-RtssCli.ps1") -TargetDir $embedDir
-}
 
 function Invoke-Publish([string]$OutDir, [bool]$SingleFile) {
     if (Test-Path -LiteralPath $OutDir) { Remove-Item -LiteralPath $OutDir -Recurse -Force }

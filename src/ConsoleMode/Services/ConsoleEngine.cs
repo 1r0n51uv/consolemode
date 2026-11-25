@@ -1,6 +1,5 @@
 using ConsoleMode.Models;
 using ConsoleMode.Native;
-using ConsoleMode.Services.Tv;
 
 namespace ConsoleMode.Services;
 
@@ -9,10 +8,8 @@ public sealed partial class ConsoleEngine
     public ConsoleRuntimeState State { get; } = new();
     public MonitorService Monitors { get; } = new();
     public AudioService Audio { get; } = new();
-    public RtssService Rtss { get; } = new();
     public LaunchService Launch { get; } = new();
     public VideoFeaturesService Video { get; } = new();
-    public TvControlService Tv { get; } = new();
 
     public const string AudioOnConnectId = "__on_connect__";
 
@@ -74,11 +71,6 @@ public sealed partial class ConsoleEngine
         State.CachedXboxHandle = 0;
         State.AudioWatchComplete = false;
         State.BigPictureWatchActive = false;
-        State.FpsLimit = config.FpsLimit;
-        State.RtssBackup = null;
-        State.RtssLimitApplied = false;
-        State.GameProfiles = [.. config.GameProfiles];
-        ResetGameProfileState();
         OnUi(NativeWindows.StopBigPictureExitWatch);
 
         // Before any screen changes: Windows may reshuffle the icons once the primary moves.
@@ -94,11 +86,6 @@ public sealed partial class ConsoleEngine
         State.PointerParks = 0;
         State.LastPointerPark = null;
         State.PointerBefore = config.ParkPointer ? MousePointer.Position() : null;
-
-        // Wake the TV and switch it to the PC first, so the game screen shows up in the fresh
-        // read below (or in EnsureActive's wait). A TV that doesn't answer is only logged.
-        State.Tv = config.Tv;
-        if (config.Tv is { IsEnabled: true } tv) Tv.TurnOn(tv);
 
         // Read the screens fresh: the row the window shows can be stale (the TV was switched off,
         // or the last restore disconnected it), and a stale "active" would skip turning it on.
@@ -178,10 +165,6 @@ public sealed partial class ConsoleEngine
                 case "blackCurtain":
                     ShowCurtains(config.HideMonitors);
                     break;
-                case "turnOff":
-                    Monitors.DisableDdc(config.HideMonitors);
-                    Thread.Sleep(400);
-                    break;
             }
             config = FollowFocusRename(saved, config);
         }
@@ -228,17 +211,6 @@ public sealed partial class ConsoleEngine
             }
         }
 
-        if (config.FpsLimit > 0 && Rtss.IsReady)
-        {
-            var rtss = Rtss.Enable(config.FpsLimit, State);
-            if (!rtss.Success && !string.IsNullOrWhiteSpace(rtss.Message))
-                AppLog.Write(rtss.Message);
-        }
-
-        if (RtssOverlay.HidesOthers(config.FpsOverlay) && Rtss.IsInstalled
-            && !Rtss.ApplyOverlay(config.FpsOverlay, config.FpsOverlayLayout))
-            AppLog.Write("RTSS: o contador de FPS não pôde ser exibido");
-
         switch (config.FullscreenMode)
         {
             case "bigPicture":
@@ -280,7 +252,6 @@ public sealed partial class ConsoleEngine
         if (mode == "xboxMode")
         {
             TickAudio();
-            TickGameProfile();
             TickPointer();
             return "running";
         }
@@ -289,7 +260,6 @@ public sealed partial class ConsoleEngine
         {
             if (IsCustomAppExit()) return "exit";
             TickAudio();
-            TickGameProfile();
             TickPointer();
             return "running";
         }
@@ -347,7 +317,6 @@ public sealed partial class ConsoleEngine
         }
 
         TickAudio();
-        TickGameProfile();
         TickPointer();
         return "running";
     }
@@ -366,8 +335,6 @@ public sealed partial class ConsoleEngine
         if (!State.IsActive)
         {
             OnUi(BlackCurtain.Close);
-            Rtss.Restore(State);
-            Rtss.SetOverlay("", hideOthers: false);
             return;
         }
 
@@ -394,11 +361,8 @@ public sealed partial class ConsoleEngine
                     : "Ícones da área de trabalho: visíveis de novo");
             if (State.DesktopIcons is { Count: > 0 } icons) RestoreDesktopIconsLater(icons);
             ReturnPointer();
-            Rtss.Restore(State);
-            Rtss.SetOverlay("", hideOthers: false);
             Monitors.ClearCache();
             Audio.ClearCache();
-            if (State.Tv is { IsEnabled: true, HasRestoreStep: true } tv) Tv.Restore(tv);
             AppLog.Write("Stop-ConsoleMode: restauração concluída");
             // Only once the screens are back: a restore that threw or left them wrong is tried again on the next start.
             if (!restore.Success)
@@ -421,7 +385,6 @@ public sealed partial class ConsoleEngine
             State.RestoreInProgress = false;
             State.IsActive = false;
             State.ShouldExit = false;
-            State.Tv = null;
             State.SteamMoved = false;
             State.MoveCount = 0;
             State.HasAppeared = false;
@@ -448,9 +411,6 @@ public sealed partial class ConsoleEngine
             State.CachedXboxHandle = 0;
             State.AudioWatchComplete = false;
             State.BigPictureWatchActive = false;
-            State.FpsLimit = 0;
-            State.RtssBackup = null;
-            State.RtssLimitApplied = false;
             State.HdrApplied = false;
             State.HdrMonitor = null;
             State.VrrApplied = false;
@@ -461,8 +421,6 @@ public sealed partial class ConsoleEngine
             State.PointerParks = 0;
             State.LastPointerPark = null;
             State.PointerBefore = null;
-            // The restore above already put the screen, HDR, FPS and audio back as before the session.
-            ResetGameProfileState();
             OnUi(NativeWindows.StopBigPictureExitWatch);
         }
     }

@@ -36,10 +36,6 @@ public sealed class AppConfig
     public string AudioDeviceId { get; set; } = "";
     public string AudioDeviceName { get; set; } = "";
     public bool AudioAutoSwitch { get; set; }
-    public int FpsLimit { get; set; }
-    /// <summary>RtssOverlay style: "external" | "off" | "compact" (FPS only) | "stats" | "detailed" | "custom". Applied over the game during a session.</summary>
-    public string FpsOverlay { get; set; } = RtssOverlay.External;
-    public FpsOverlayLayout FpsOverlayLayout { get; set; } = new();
     public Dictionary<string, SavedDisplayMode> MonitorModes { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public bool HdrEnable { get; set; }
     public bool VrrEnable { get; set; }
@@ -142,14 +138,11 @@ public sealed class AppConfig
     /// <summary>The picture used when the background is "image".</summary>
     public string ConsoleBackgroundImage { get; set; } = "";
 
+    /// <summary>The glass of cards, rows and bars: "dark" | "light" | "clear" | "accent" (CardMaterial).</summary>
+    public string CardMaterial { get; set; } = "dark";
+
     /// <summary>A version the user chose to skip; newer ones are still announced.</summary>
     public string SkippedUpdateVersion { get; set; } = "";
-
-    /// <summary>Turning the TV on / to the PC's input when console mode starts (issue #75).</summary>
-    public TvControlConfig Tv { get; set; } = new();
-
-    /// <summary>Settings applied while a given Steam game runs during a session (issue #69).</summary>
-    public List<GameProfile> GameProfiles { get; set; } = [];
 
     /// <summary>
     /// A copy with other monitor fields and every other setting as it is here. A copy, not a field-by-field
@@ -167,65 +160,6 @@ public sealed class AppConfig
     [JsonIgnore]
     public string SetupKey =>
         $"{FocusMonitor}|{(MonitorModes.TryGetValue(FocusMonitor, out var mode) ? mode.Key : "current")}";
-}
-
-public sealed class TvControlConfig
-{
-    public const string None = "none";
-    public const string AndroidTv = "androidTv";
-
-    /// <summary>"none" | "androidTv".</summary>
-    public string Provider { get; set; } = None;
-
-    /// <summary>The TV's IP address or host name, optionally with ":port".</summary>
-    public string Host { get; set; } = "";
-
-    /// <summary>For Wake-on-LAN when the TV is in deep standby; empty = don't send it.</summary>
-    public string MacAddress { get; set; } = "";
-
-    /// <summary>HDMI input the PC is plugged into (1-4).</summary>
-    public int HdmiInput { get; set; } = 1;
-
-    /// <summary>Android TV: shell command that switches to the PC's input, for TVs that ignore the HDMI key codes.</summary>
-    public string InputCommand { get; set; } = "";
-
-    /// <summary>Put the TV in standby after the desk is restored. Off by default.</summary>
-    public bool TurnOffOnRestore { get; set; }
-
-    /// <summary>Android TV: shell command sent when the desk is back, before standby (Home screen, another input…).</summary>
-    public string RestoreCommand { get; set; } = "";
-
-    /// <summary>Something to send the TV when going back to the PC.</summary>
-    [JsonIgnore]
-    public bool HasRestoreStep => TurnOffOnRestore || !string.IsNullOrWhiteSpace(RestoreCommand);
-
-    [JsonIgnore]
-    public bool IsEnabled => !string.IsNullOrWhiteSpace(Provider) && Provider != None;
-}
-
-/// <summary>
-/// One game's own settings, saved from the session menu while it runs. Every field left empty keeps
-/// the session's value. Applied when the game starts, undone when it closes.
-/// </summary>
-public sealed class GameProfile
-{
-    public int SteamAppId { get; set; }
-    public string Name { get; set; } = "";
-    public SavedDisplayMode? Mode { get; set; }
-    public bool? Hdr { get; set; }
-    /// <summary>0 = no limit; null = leave the session's.</summary>
-    public int? FpsLimit { get; set; }
-    public string? AudioDeviceId { get; set; }
-    public string? AudioDeviceName { get; set; }
-}
-
-/// <summary>What the game screen looked like when a game started, to go back to when it closes.</summary>
-public sealed class GameBaseline
-{
-    public SavedDisplayMode? Mode { get; set; }
-    public bool Hdr { get; set; }
-    public int FpsLimit { get; set; }
-    public string? AudioDeviceId { get; set; }
 }
 
 public sealed class SavedDisplayMode
@@ -403,8 +337,6 @@ public sealed class ScreenRect
 public sealed class ConsoleRuntimeState
 {
     public bool IsActive { get; set; }
-    /// <summary>TV control used for this session, for the optional standby on restore.</summary>
-    public TvControlConfig? Tv { get; set; }
     public bool ShouldExit { get; set; }
     public bool RestoreInProgress { get; set; }
     public bool SteamMoved { get; set; }
@@ -446,9 +378,6 @@ public sealed class ConsoleRuntimeState
     public nint CachedXboxHandle { get; set; }
     public bool BigPictureWatchActive { get; set; }
     public bool AudioWatchComplete { get; set; }
-    public int FpsLimit { get; set; }
-    public RtssBackup? RtssBackup { get; set; }
-    public bool RtssLimitApplied { get; set; }
     public bool HdrApplied { get; set; }
     public string? HdrMonitor { get; set; }
     public bool VrrApplied { get; set; }
@@ -467,20 +396,6 @@ public sealed class ConsoleRuntimeState
     public int PointerParks { get; set; }
     public DateTime? LastPointerPark { get; set; }
     public (int X, int Y)? PointerBefore { get; set; }
-    /// <summary>Per-game profiles for this session; the session menu updates them as they are saved.</summary>
-    public List<GameProfile> GameProfiles { get; set; } = [];
-    /// <summary>The Steam game running now (0 = none), and the screen as it was when it started.</summary>
-    public int RunningGameId { get; set; }
-    public GameBaseline? GameBaseline { get; set; }
-    /// <summary>A profile changed the screen for the running game; it is undone when the game closes.</summary>
-    public bool GameProfileApplied { get; set; }
-}
-
-public sealed class RtssBackup
-{
-    public int FramerateLimit { get; set; }
-    public bool LimiterEnabled { get; set; }
-    public string SavedAt { get; set; } = "";
 }
 
 public sealed class MonitorBackupMeta

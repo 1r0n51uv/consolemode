@@ -148,11 +148,6 @@ public partial class MainViewModel
         {
             case "launch": SelectedLaunch = Next(LaunchOptions, SelectedLaunch, step); break;
             case "audio": SelectedAudio = Next(AudioOptions, SelectedAudio, step); break;
-            case "fps":
-                // Custom FPS needs a keyboard; the console cards skip it.
-                var presets = FpsOptions.Where(o => o.Value != FpsCustomValue.ToString()).ToList();
-                SelectedFps = Next(presets, SelectedFps, step);
-                break;
             case "mode":
                 if (FocusRow is null) return;
                 var index = OptionCycle.Cycle(FocusRow.Modes.Count, FocusRow.Modes.ToList().IndexOf(FocusRow.SelectedMode), step);
@@ -174,6 +169,7 @@ public partial class MainViewModel
             case "sounds": InterfaceSounds = !InterfaceSounds; break;
             case "introsound": IntroSound = !IntroSound; break;
             case "background": CycleBackgroundMode(); break;
+            case "material": CycleCardMaterial(); break;
             case "backgroundimage": PickBackgroundImage(); break;
             case "startup": StartWithWindows = !StartWithWindows; break;
             case "minimizetray": MinimizeToTray = !MinimizeToTray; break;
@@ -184,20 +180,7 @@ public partial class MainViewModel
             case "desktopicons": RestoreDesktopIcons = !RestoreDesktopIcons; break;
             case "hidedesktopicons": HideDesktopIcons = !HideDesktopIcons; break;
             case "parkpointer": ParkPointer = !ParkPointer; break;
-            case "tvpower": TvTurnOffOnRestore = !TvTurnOffOnRestore; break;
             // The FPS counter (RTSS): what it shows, one item at a time.
-            case "overlaycard": OverlayCard = !OverlayCard; break;
-            case "overlayline": OverlaySingleLine = !OverlaySingleLine; break;
-            case "ovfps": OverlayShowFps = !OverlayShowFps; break;
-            case "ovframetime": OverlayShowFrameTime = !OverlayShowFrameTime; break;
-            case "ovapi": OverlayShowApi = !OverlayShowApi; break;
-            case "ovcpu": OverlayShowCpu = !OverlayShowCpu; break;
-            case "ovcpuclock": OverlayShowCpuClock = !OverlayShowCpuClock; break;
-            case "ovram": OverlayShowRam = !OverlayShowRam; break;
-            case "ovvram": OverlayShowVram = !OverlayShowVram; break;
-            case "ovgpu": OverlayShowGpu = !OverlayShowGpu; break;
-            case "ovgpuclock": OverlayShowGpuClock = !OverlayShowGpuClock; break;
-            case "ovgputemp": OverlayShowGpuTemp = !OverlayShowGpuTemp; break;
         }
     }
 
@@ -247,19 +230,10 @@ public partial class MainViewModel
         {
             "launch" => (LocalizationService.Get("LaunchCard"), LaunchOptions.Select(o => (o.Text, o.Value)), SelectedLaunch?.Value),
             "audio" => (LocalizationService.Get("AudioOutputCard"), AudioOptions.Select(o => (o.Text, o.Value)), SelectedAudio?.Value),
-            "fps" => (LocalizationService.Get("FpsCard"), FpsOptions.Select(o => (o.Text, o.Value)), SelectedFps?.Value),
             "hide" => (LocalizationService.Get("HideOtherScreensCard"), HideStrategies.Select(o => (o.Text, o.Value)), SelectedHideStrategy?.Value),
             "language" => (LocalizationService.Get("LanguageCard"), LanguageOptions.Select(o => (o.Text, o.Value)), SelectedLanguage?.Value),
             "controllerlayout" => (LocalizationService.Get("ControllerLayoutCard"), ControllerLayoutOptions.Select(o => (o.Text, o.Value)), SelectedControllerLayout?.Value),
-            "tvprovider" => (LocalizationService.Get("TvControlCard"), TvProviders.Select(o => (o.Text, o.Value)), SelectedTvProvider?.Value),
             "introstyle" => (LocalizationService.Get("IntroStyleCard"), IntroStyleOptions.Select(o => (o.Text, o.Value)), SelectedIntroStyle?.Value),
-            "tvhdmi" => (LocalizationService.Get("TvHdmiCard"), TvHdmiInputs.Select(o => (o.Text, o.Value)), SelectedTvHdmiInput?.Value),
-            "overlay" => (LocalizationService.Get("FpsOverlayCard"), FpsOverlayOptions.Select(o => (o.Text, o.Value)), SelectedFpsOverlay?.Value),
-            "overlaysize" => (LocalizationService.Get("FpsOverlaySize"), FpsOverlaySizeOptions.Select(o => (o.Text, o.Value)), SelectedFpsOverlaySize?.Value),
-            "overlayposition" => (LocalizationService.Get("FpsOverlayPosition"), FpsOverlayPositionOptions.Select(o => (o.Text, o.Value)), SelectedFpsOverlayPosition?.Value),
-            "overlaycolor" => (LocalizationService.Get("FpsOverlayColor"), FpsOverlayColorOptions.Select(o => (o.Text, o.Value)), SelectedFpsOverlayColor?.Value),
-            "profiles" when _gameProfiles.Count > 0 => (LocalizationService.Get("GameProfilesPickerTitle"),
-                _gameProfiles.Select(p => (LocalizationService.Get("GameProfileRemove", p.Name), p.SteamAppId.ToString())), null),
             "mode" when FocusRow is not null => (LocalizationService.Get("ResolutionRefreshCard"), FocusRow.Modes.Select(m => (m.Text, m.Key)), FocusRow.SelectedMode?.Key),
             _ => (null, null, null)
         };
@@ -282,22 +256,11 @@ public partial class MainViewModel
         {
             case "launch": SelectedLaunch = LaunchOptions.FirstOrDefault(o => o.Value == item.Value) ?? SelectedLaunch; break;
             case "audio": SelectedAudio = AudioOptions.FirstOrDefault(o => o.Value == item.Value) ?? SelectedAudio; break;
-            case "fps": SelectedFps = FpsOptions.FirstOrDefault(o => o.Value == item.Value) ?? SelectedFps; break;
             case "hide": SelectedHideStrategy = HideStrategies.FirstOrDefault(o => o.Value == item.Value) ?? SelectedHideStrategy; break;
             case "language": SelectedLanguage = LanguageOptions.FirstOrDefault(o => o.Value == item.Value) ?? SelectedLanguage; break;
             case "controllerlayout": SelectedControllerLayout = ControllerLayoutOptions.FirstOrDefault(o => o.Value == item.Value) ?? SelectedControllerLayout; break;
-            case "tvprovider": SelectedTvProvider = TvProviders.FirstOrDefault(o => o.Value == item.Value) ?? SelectedTvProvider; break;
             case "introstyle": ChooseIntroStyle(item.Value); break;
-            case "tvhdmi": SelectedTvHdmiInput = TvHdmiInputs.FirstOrDefault(o => o.Value == item.Value) ?? SelectedTvHdmiInput; break;
-            case "overlay": SelectedFpsOverlay = FpsOverlayOptions.FirstOrDefault(o => o.Value == item.Value) ?? SelectedFpsOverlay; break;
-            case "overlaysize": SelectedFpsOverlaySize = FpsOverlaySizeOptions.FirstOrDefault(o => o.Value == item.Value) ?? SelectedFpsOverlaySize; break;
-            case "overlayposition": SelectedFpsOverlayPosition = FpsOverlayPositionOptions.FirstOrDefault(o => o.Value == item.Value) ?? SelectedFpsOverlayPosition; break;
-            case "overlaycolor": SelectedFpsOverlayColor = FpsOverlayColorOptions.FirstOrDefault(o => o.Value == item.Value) ?? SelectedFpsOverlayColor; break;
             case "tile": PickTileMenu(item.Value); break;
-            case "profiles":
-                if (int.TryParse(item.Value, out var appId))
-                    RemoveGameProfile(GameProfileItems.FirstOrDefault(p => p.AppId == appId));
-                break;
             case "mode":
                 if (FocusRow?.Modes.FirstOrDefault(m => m.Key == item.Value) is { } mode)
                 {

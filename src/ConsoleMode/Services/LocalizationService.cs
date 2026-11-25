@@ -10,11 +10,7 @@ public static class LocalizationService
 {
     public const string PortugueseBrazil = "pt-BR";
     public const string EnglishUnitedStates = "en-US";
-    public const string SpanishSpain = "es-ES";
-    public const string GermanGermany = "de-DE";
-    public const string FrenchFrance = "fr-FR";
     public const string ItalianItaly = "it-IT";
-    public const string RussianRussia = "ru-RU";
 
     /// <summary>A UI language: its culture code and how it names itself in the language picker.</summary>
     public sealed record LanguageInfo(string Code, string NativeName);
@@ -28,11 +24,7 @@ public static class LocalizationService
     [
         new(PortugueseBrazil, "Português (Brasil)"),
         new(EnglishUnitedStates, "English (United States)"),
-        new(SpanishSpain, "Español"),
-        new(GermanGermany, "Deutsch"),
-        new(FrenchFrance, "Français"),
-        new(ItalianItaly, "Italiano"),
-        new(RussianRussia, "Русский")
+        new(ItalianItaly, "Italiano")
     ];
 
     private static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> Catalogs =
@@ -147,28 +139,6 @@ public sealed class LocalizedStrings : INotifyPropertyChanged
     public string HdrDescription => LocalizationService.Get(nameof(HdrDescription));
     public string VrrCard => LocalizationService.Get(nameof(VrrCard));
     public string VrrDescription => LocalizationService.Get(nameof(VrrDescription));
-    public string FpsCard => LocalizationService.Get(nameof(FpsCard));
-    public string FpsOverlayCard => LocalizationService.Get(nameof(FpsOverlayCard));
-    public string FpsOverlayItems => LocalizationService.Get(nameof(FpsOverlayItems));
-    public string FpsOverlayShowApi => LocalizationService.Get(nameof(FpsOverlayShowApi));
-    public string FpsOverlayShowFps => LocalizationService.Get(nameof(FpsOverlayShowFps));
-    public string FpsOverlayShowFrameTime => LocalizationService.Get(nameof(FpsOverlayShowFrameTime));
-    public string FpsOverlaySingleLine => LocalizationService.Get(nameof(FpsOverlaySingleLine));
-    public string FpsOverlayColor => LocalizationService.Get(nameof(FpsOverlayColor));
-    public string FpsOverlayPcItems => LocalizationService.Get(nameof(FpsOverlayPcItems));
-    public string FpsOverlayPcItemsDescription => LocalizationService.Get(nameof(FpsOverlayPcItemsDescription));
-    public string FpsOverlayShowCpu => LocalizationService.Get(nameof(FpsOverlayShowCpu));
-    public string FpsOverlayShowCpuClock => LocalizationService.Get(nameof(FpsOverlayShowCpuClock));
-    public string FpsOverlayShowGpu => LocalizationService.Get(nameof(FpsOverlayShowGpu));
-    public string FpsOverlayShowGpuClock => LocalizationService.Get(nameof(FpsOverlayShowGpuClock));
-    public string FpsOverlayShowGpuTemp => LocalizationService.Get(nameof(FpsOverlayShowGpuTemp));
-    public string FpsOverlayShowVram => LocalizationService.Get(nameof(FpsOverlayShowVram));
-    public string FpsOverlayShowRam => LocalizationService.Get(nameof(FpsOverlayShowRam));
-    public string FpsOverlaySize => LocalizationService.Get(nameof(FpsOverlaySize));
-    public string FpsOverlayPosition => LocalizationService.Get(nameof(FpsOverlayPosition));
-    public string FpsOverlayCardBackground => LocalizationService.Get(nameof(FpsOverlayCardBackground));
-    public string FpsOverlayCardBackgroundDescription => LocalizationService.Get(nameof(FpsOverlayCardBackgroundDescription));
-    public string FpsPlaceholder => LocalizationService.Get(nameof(FpsPlaceholder));
     public string AppSection => LocalizationService.Get(nameof(AppSection));
     public string StartupCard => LocalizationService.Get(nameof(StartupCard));
     public string StartupDescription => LocalizationService.Get(nameof(StartupDescription));
@@ -237,6 +207,8 @@ public sealed class LocalizedStrings : INotifyPropertyChanged
     public string SwitcherCloseConfirmAction => LocalizationService.Get(nameof(SwitcherCloseConfirmAction));
     public string ShortcutCancel => LocalizationService.Get(nameof(ShortcutCancel));
     public string BackgroundCard => LocalizationService.Get(nameof(BackgroundCard));
+    public string CardMaterialCard => LocalizationService.Get(nameof(CardMaterialCard));
+    public string CardMaterialDescription => LocalizationService.Get(nameof(CardMaterialDescription));
     public string BackgroundDescription => LocalizationService.Get(nameof(BackgroundDescription));
     public string BackgroundImageCard => LocalizationService.Get(nameof(BackgroundImageCard));
     public string HomeSetupHeading => LocalizationService.Get(nameof(HomeSetupHeading));
@@ -256,9 +228,6 @@ public sealed class LocalizedStrings : INotifyPropertyChanged
     public string HideIconsDescription => LocalizationService.Get(nameof(HideIconsDescription));
     public string ParkPointerCard => LocalizationService.Get(nameof(ParkPointerCard));
     public string ParkPointerDescription => LocalizationService.Get(nameof(ParkPointerDescription));
-    public string GameProfilesCard => LocalizationService.Get(nameof(GameProfilesCard));
-    public string GameProfilesDescription => LocalizationService.Get(nameof(GameProfilesDescription));
-    public string GameProfileRow => LocalizationService.Get(nameof(GameProfileRow));
     public string HideCursorCard => LocalizationService.Get(nameof(HideCursorCard));
     public string HideCursorDescription => LocalizationService.Get(nameof(HideCursorDescription));
     public string ControllerMouseRow => LocalizationService.Get(nameof(ControllerMouseRow));
@@ -281,21 +250,6 @@ public sealed class LocalizedStrings : INotifyPropertyChanged
     public string OtherAppsStageBeta => LocalizationService.Get(nameof(OtherAppsStageBeta));
     public string TvConfirmationCard => LocalizationService.Get(nameof(TvConfirmationCard));
     public string TvConfirmationDescription => LocalizationService.Get(nameof(TvConfirmationDescription));
-    public string TvSection => LocalizationService.Get(nameof(TvSection));
-    public string TvControlCard => LocalizationService.Get(nameof(TvControlCard));
-    public string TvHostCard => LocalizationService.Get(nameof(TvHostCard));
-    public string TvHostDescription => LocalizationService.Get(nameof(TvHostDescription));
-    public string TvMacCard => LocalizationService.Get(nameof(TvMacCard));
-    public string TvMacDescription => LocalizationService.Get(nameof(TvMacDescription));
-    public string TvHdmiCard => LocalizationService.Get(nameof(TvHdmiCard));
-    public string TvHdmiDescription => LocalizationService.Get(nameof(TvHdmiDescription));
-    public string TvInputCommandCard => LocalizationService.Get(nameof(TvInputCommandCard));
-    public string TvInputCommandDescription => LocalizationService.Get(nameof(TvInputCommandDescription));
-    public string TvRestoreCommandCard => LocalizationService.Get(nameof(TvRestoreCommandCard));
-    public string TvTurnOffCard => LocalizationService.Get(nameof(TvTurnOffCard));
-    public string TvTurnOffDescription => LocalizationService.Get(nameof(TvTurnOffDescription));
-    public string TvTestCard => LocalizationService.Get(nameof(TvTestCard));
-    public string TvTestDescription => LocalizationService.Get(nameof(TvTestDescription));
     public string TutorialCard => LocalizationService.Get(nameof(TutorialCard));
     public string TutorialDescription => LocalizationService.Get(nameof(TutorialDescription));
     public string SessionTourCard => LocalizationService.Get(nameof(SessionTourCard));
