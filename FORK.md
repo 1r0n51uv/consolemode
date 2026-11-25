@@ -10,6 +10,15 @@ with one file, `docs/upstream/<tag>.md`, that sorts every upstream change into *
 **skip** or **unclear**, using the two tables below. 1ron51uv decides; the chosen work is then done in
 separate PRs. Keep the tables current: they are what the agent measures against.
 
+## Versions
+
+Ours is upstream's version plus a fourth number, our own variant: with upstream at 1.7.1 we publish
+1.7.1.1, 1.7.1.2, and so on. When upstream releases 1.7.2 and we take something from it, the next one is
+1.7.2.1. The number is set by hand in `src/ConsoleMode/ConsoleMode.csproj` (`Version`, `AssemblyVersion`,
+`FileVersion`, `InformationalVersion`) with a `## [<version>]` section in both changelogs. The keeper never
+changes it. (1.7.2, published earlier with the Italian catalog, is above this line: the first install of
+1.7.1.1 is done by hand over it, because the update check does not offer a lower version.)
+
 ## Removed (upstream changes here are skipped, unless 1ron51uv asks otherwise)
 
 | What | Where it lived |

@@ -99,7 +99,7 @@ jobs:
           INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
           $v = $env:INPUT_VERSION.TrimStart("v")
-          if ($v -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.\-]+)?$') { throw "Versão inválida: $v" }
+          if ($v -notmatch '^\d+\.\d+\.\d+(\.\d+)?(-[0-9A-Za-z.\-]+)?$') { throw "Versão inválida: $v" }
           "version=$v" >> $env:GITHUB_OUTPUT
 
       - name: Run tests
@@ -162,7 +162,7 @@ jobs:
         run: |
           $v = if ($env:EVENT_NAME -eq "push") { $env:REF_NAME } else { $env:INPUT_VERSION }
           $v = $v.TrimStart("v")
-          if ($v -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.\-]+)?$') { throw "Versão inválida: $v" }
+          if ($v -notmatch '^\d+\.\d+\.\d+(\.\d+)?(-[0-9A-Za-z.\-]+)?$') { throw "Versão inválida: $v" }
           $publish = ($env:EVENT_NAME -eq "push") -or ($env:INPUT_PUBLISH -eq "true")
           if ($publish -and $env:EVENT_NAME -ne "push") {
             # Publishing by hand creates the tag here: only from main, and never over a tag that exists.
