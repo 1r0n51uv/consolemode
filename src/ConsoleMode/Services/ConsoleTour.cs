@@ -5,16 +5,10 @@ public enum ConsoleTourStop
 {
     /// <summary>What the app does; nothing on screen is highlighted.</summary>
     Welcome,
-    /// <summary>The tabs at the top, LB / RB.</summary>
-    Tabs,
-    /// <summary>The row of launchers on Home: what opens.</summary>
+    /// <summary>The dock of launchers on Home: what opens, and Play on each card.</summary>
     Launchers,
-    /// <summary>The play button: entering console mode.</summary>
-    Play,
-    /// <summary>The screens on Session: which one is the game screen and what happens to the others.</summary>
+    /// <summary>The screens in Settings: which one is the game screen and what happens to the others.</summary>
     Screens,
-    /// <summary>The quick settings on Session: audio, resolution, HDR, FPS.</summary>
-    QuickSettings,
     /// <summary>The categories on System: every setting.</summary>
     System,
     /// <summary>The controller shortcuts (System → Controller): Home button, session menu, back to the PC.</summary>
@@ -31,18 +25,17 @@ public static class ConsoleTour
 {
     public static IReadOnlyList<ConsoleTourStop> Stops { get; } = Enum.GetValues<ConsoleTourStop>();
 
-    /// <summary>The tab a stop is shown on: 0 Home, 1 Session, 2 System (the console tab indexes).</summary>
+    /// <summary>The page a stop is shown on: 0 Home, 2 System (the console tab indexes; 1, Session, is gone).</summary>
     public static int Tab(ConsoleTourStop stop) => stop switch
     {
-        ConsoleTourStop.Screens or ConsoleTourStop.QuickSettings => 1,
-        ConsoleTourStop.System or ConsoleTourStop.Shortcuts => 2,
+        ConsoleTourStop.Screens or ConsoleTourStop.System or ConsoleTourStop.Shortcuts => 2,
         _ => 0
     };
 
     /// <summary>The System category a stop opens (the controller one for the shortcuts), or null to leave it as it is.</summary>
     public static int? SystemCategory(ConsoleTourStop stop) => stop switch
     {
-        ConsoleTourStop.System => 0,
+        ConsoleTourStop.Screens or ConsoleTourStop.System => 0,
         ConsoleTourStop.Shortcuts => 2,
         _ => null
     };

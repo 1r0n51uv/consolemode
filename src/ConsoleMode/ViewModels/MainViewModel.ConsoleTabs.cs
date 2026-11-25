@@ -3,8 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ConsoleMode.ViewModels;
 
-// The console interface is three tabs, switched with LB / RB (L1 / R1): Home (the launchers and the
-// play button), Session (screens and quick settings) and System (every setting, by category).
+// The console interface is Home (the dock of launchers) and, behind its Settings card, System (every setting, by
+// category; the screens are there too). The Session page and the tab bar are gone: no LB / RB.
 public partial class MainViewModel
 {
     public const int HomeTabIndex = 0;
@@ -44,15 +44,9 @@ public partial class MainViewModel
     [RelayCommand]
     private void SelectConsoleTab(string index)
     {
-        if (int.TryParse(index, out var value)) ConsoleTabIndex = Math.Clamp(value, HomeTabIndex, SystemTabIndex);
+        if (int.TryParse(index, out var value)) ConsoleTabIndex = value == SystemTabIndex ? SystemTabIndex : HomeTabIndex;
     }
 
-    /// <summary>LB (-1) / RB (+1). The tabs don't wrap, like the Xbox ones. Returns whether it moved.</summary>
-    public bool StepConsoleTab(int step)
-    {
-        var next = Math.Clamp(ConsoleTabIndex + step, HomeTabIndex, SystemTabIndex);
-        if (next == ConsoleTabIndex) return false;
-        ConsoleTabIndex = next;
-        return true;
-    }
+    /// <summary>LB / RB used to switch tabs; there is one page now, so they do nothing.</summary>
+    public bool StepConsoleTab(int step) => false;
 }

@@ -30,11 +30,11 @@ public class ConsoleTourTests
     }
 
     [Fact]
-    public void It_walks_the_tabs_left_to_right_and_ends_back_on_home()
+    public void It_walks_the_pages_in_order_and_ends_back_on_home()
     {
         var tabs = ConsoleTour.Stops.SkipLast(1).Select(ConsoleTour.Tab).ToList();
         Assert.Equal(tabs.Order(), tabs);
-        Assert.Equal([0, 1, 2], tabs.Distinct());
+        Assert.Equal([0, 2], tabs.Distinct());
         Assert.Equal(0, ConsoleTour.Tab(ConsoleTourStop.Done));
     }
 
@@ -44,7 +44,7 @@ public class ConsoleTourTests
         Assert.Equal(2, ConsoleTour.Tab(ConsoleTourStop.Shortcuts));
         Assert.Equal(2, ConsoleTour.SystemCategory(ConsoleTourStop.Shortcuts));
         Assert.Equal(0, ConsoleTour.SystemCategory(ConsoleTourStop.System));
-        Assert.Null(ConsoleTour.SystemCategory(ConsoleTourStop.Play));
+        Assert.Null(ConsoleTour.SystemCategory(ConsoleTourStop.Launchers));
     }
 
     [Theory]
@@ -69,9 +69,7 @@ public class ConsoleTourTests
         // How many {n} the view model fills in for each stop (MainViewModel.ConsoleTourArgs).
         var arguments = new Dictionary<ConsoleTourStop, int>
         {
-            [ConsoleTourStop.Tabs] = 2,
             [ConsoleTourStop.Launchers] = 2,
-            [ConsoleTourStop.Play] = 2,
             [ConsoleTourStop.Screens] = 1,
             [ConsoleTourStop.System] = 1,
             [ConsoleTourStop.Done] = 2

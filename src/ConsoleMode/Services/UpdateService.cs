@@ -276,6 +276,6 @@ public static partial class UpdateService
         }
 
         public override string ToString() =>
-            $"{_core[0]}.{_core[1]}.{_core[2]}{(_pre.Length > 0 ? "-" + string.Join('.', _pre) : "")}";
+            $"{_core[0]}.{_core[1]}.{_core[2]}{(_core[3] > 0 ? "." + _core[3] : "")}{(_pre.Length > 0 ? "-" + string.Join('.', _pre) : "")}";
     }
 }

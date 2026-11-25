@@ -33,7 +33,6 @@ public sealed partial class ConsoleHomeView : UserControl
     /// A mouse / touch press on a launcher is under way: from the press to the release, which is when the tile's
     /// Click fires. That click picks it and leaves the focus where it is; A or Enter at any other moment is not one.
     /// </summary>
-    private bool _launchPointerDown;
     private int _shownTab;
     private static readonly Windows.UI.ViewManagement.UISettings Ui = new();
 
@@ -66,10 +65,6 @@ public sealed partial class ConsoleHomeView : UserControl
         CategoryRail.GettingFocus += OnRailGettingFocus;
         CategoryRail.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler((_, _) => _railPointerPressedAt = Environment.TickCount64), true);
         // The release reaches the row after the tile has handled it (and raised Click), so the flag covers that click only.
-        LaunchRow.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler((_, _) => _launchPointerDown = true), true);
-        LaunchRow.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler((_, _) => _launchPointerDown = false), true);
-        LaunchRow.AddHandler(UIElement.PointerCaptureLostEvent, new PointerEventHandler((_, _) => _launchPointerDown = false), true);
-        LaunchRow.AddHandler(UIElement.PointerCanceledEvent, new PointerEventHandler((_, _) => _launchPointerDown = false), true);
         // The sounds are the pad's (GamepadNavigator, LB / RB): mouse clicks stay silent.
         ViewModel.PropertyChanged += OnViewModelChanged;
         ApplyCardMaterial(ViewModel.GlassMaterial);
@@ -121,8 +116,10 @@ public sealed partial class ConsoleHomeView : UserControl
         _navigator.TabRequested += StepTab;
         _navigator.MenuRequested += () =>
         {
-            // Like a console's game row: ☰ on one of your apps opens its menu (Remove from Home). Anywhere else, it plays.
+            // Like a console's game row: ☰ on a card opens its menu (its pictures, Remove from Home). On a launcher
+            // without one, it plays; anywhere else on Home, it plays the launcher that is picked.
             if (!IsOverlayOpen() && ViewModel.OpenTileMenu(FocusedLaunchTile())) { UiSounds.Play(UiSound.Confirm); return; }
+            if (!IsOverlayOpen() && FocusedLaunchTile() is { IsLauncher: true } focused) { ViewModel.ChooseLaunchTileCommand.Execute(focused); return; }
             if (ViewModel.CanStart && !ViewModel.IsRolePanelOpen && !ViewModel.IsConsoleSettingsOpen
                 && !ViewModel.IsPickerOpen && !ViewModel.IsShortcutEditorOpen && !ViewModel.IsConsoleTourOpen
                 && !ViewModel.IsControllerTestOpen && !ViewModel.IsUpdateOpen)
@@ -272,9 +269,18 @@ public sealed partial class ConsoleHomeView : UserControl
         if (ViewModel.IsConsoleTourOpen) { ConsoleTourNextButton.Focus(FocusState.Keyboard); return; }
         if (ViewModel.IsShortcutEditorOpen) { FocusShortcutEditorTarget(); return; }
         if (ViewModel.IsSystemTab) { FocusSystemCategory(); return; }
-        if (ViewModel.IsSessionTab) { (FocusManager.FindFirstFocusableElement(ScreenCards) as Control)?.Focus(FocusState.Keyboard); return; }
-        if (ViewModel.CanStart) { PlayButton.Focus(FocusState.Keyboard); return; }
-        (FocusManager.FindFirstFocusableElement(ScreenCards) as Control)?.Focus(FocusState.Keyboard);
+        if (FocusLaunchCard()) return;
+        (FocusManager.FindFirstFocusableElement(LaunchRow) as Control)?.Focus(FocusState.Keyboard);
+    }
+
+    /// <summary>The card of the launcher that is picked (else the first launcher, else the first card) takes the focus.</summary>
+    private bool FocusLaunchCard()
+    {
+        var tiles = ViewModel.LaunchTiles.ToList();
+        var index = tiles.FindIndex(tile => tile.IsSelected);
+        if (index < 0) index = tiles.FindIndex(tile => tile.IsLauncher);
+        if (index < 0) index = 0;
+        return LaunchRow.ContainerFromIndex(index) is ContentPresenter { ContentTemplateRoot: DockCard card } && card.BodyButton.Focus(FocusState.Keyboard);
     }
 
     /// <summary>
@@ -313,7 +319,6 @@ public sealed partial class ConsoleHomeView : UserControl
     private FrameworkElement TabPanel(int tab) => tab switch
     {
         MainViewModel.HomeTabIndex => HomePanel,
-        MainViewModel.SessionTabIndex => SessionPanel,
         _ => SettingsPanel
     };
 
@@ -753,12 +758,8 @@ public sealed partial class ConsoleHomeView : UserControl
     {
         FrameworkElement[] parts = stop switch
         {
-            ConsoleTourStop.Tabs => [TabBar],
-            ConsoleTourStop.Launchers => [LaunchRow],
-            // What will open, where and what changes, and the play button: the text talks about the line above it.
-            ConsoleTourStop.Play => [HomeSummary],
+            ConsoleTourStop.Launchers => [DockScroll],
             ConsoleTourStop.Screens => [ScreenCards],
-            ConsoleTourStop.QuickSettings => [QuickCards],
             ConsoleTourStop.System => [CategoryRail],
             ConsoleTourStop.Shortcuts => [HomeShortcutRow, ExitShortcutRow],
             _ => []
@@ -780,7 +781,7 @@ public sealed partial class ConsoleHomeView : UserControl
         if (!ViewModel.IsConsoleTourOpen) return;
         if (TourTargetElement(ViewModel.ConsoleTourStopNow) is { } part)
         {
-            // The quick settings sit low on the Session page: scroll them in before measuring.
+            // A part low on the page: scroll it in before measuring.
             part.StartBringIntoView(new BringIntoViewOptions { AnimationDesired = false });
         }
         TabPanel(ViewModel.ConsoleTabIndex).UpdateLayout();
@@ -793,7 +794,6 @@ public sealed partial class ConsoleHomeView : UserControl
 
     private FrameworkElement? TourTargetElement(ConsoleTourStop stop) => stop switch
     {
-        ConsoleTourStop.QuickSettings => QuickCards,
         ConsoleTourStop.Screens => ScreenCards,
         ConsoleTourStop.Shortcuts => HomeShortcutRow,
         _ => null
@@ -1029,23 +1029,25 @@ public sealed partial class ConsoleHomeView : UserControl
         Root.XamlRoot is { } root && FocusManager.GetFocusedElement(root) is Button { DataContext: LaunchTile tile } button && IsInside(button, LaunchRow)
             ? tile : null;
 
-    /// <summary>A right click on one of your apps' tiles: its menu. The launcher that opens doesn't change.</summary>
-    private void OnLaunchTileRightTapped(object sender, RightTappedRoutedEventArgs e)
+    /// <summary>A right click on a card: its menu (its pictures, Remove from Home). The launcher that opens doesn't change.</summary>
+    private void OnLaunchTileMenuRequested(object sender, RightTappedRoutedEventArgs e)
     {
-        if (sender is not Button { DataContext: LaunchTile tile } || IsOverlayOpen() || !MainViewModel.HasTileMenu(tile)) return;
+        if (sender is not DockCard { Tile: { } tile } || IsOverlayOpen() || !MainViewModel.HasTileMenu(tile)) return;
         e.Handled = true;
         ViewModel.OpenTileMenu(tile);
     }
 
-    /// <summary>
-    /// A on a launcher (pad or keyboard) picks it and takes the focus down to Play now, so a second A plays.
-    /// A mouse click only picks it: the pointer is already where it can click Play now.
-    /// </summary>
-    private void OnLaunchTileClick(object sender, RoutedEventArgs e)
+    /// <summary>A, Enter or a click on a card: Play on a launcher, add an app on "+", every setting on Settings.</summary>
+    private void OnLaunchTileInvoked(object sender, RoutedEventArgs e)
     {
-        // How this press came in, not how the tile got its focus: it may hold the pad's focus and still be clicked.
-        if (sender is not Button { DataContext: LaunchTile { IsAdd: false } } || _launchPointerDown) return;
-        if (ViewModel.CanStart) PlayButton.Focus(FocusState.Keyboard);
+        if (sender is not DockCard { Tile: { } tile } || IsOverlayOpen()) return;
+        ViewModel.ChooseLaunchTileCommand.Execute(tile);
+    }
+
+    /// <summary>A card opened (focus or pointer): its colour tints the background and the glass.</summary>
+    private void OnLaunchTileOpened(object? sender, EventArgs e)
+    {
+        if (sender is DockCard { Tile: { } tile }) ViewModel.AmbientTile = tile;
     }
 
     /// <summary>Cards (not settings rows) grow when focused and shrink back when it leaves; the launchers grow more.</summary>
