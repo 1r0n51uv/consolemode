@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="ConsoleMode.Controls.HomeTile"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- One tile of the row at the top of Home, like a console's: a small square, and the one with the focus grows, gets a
+         white outline and shows its name beside it (pushing the others along). -->
+    <StackPanel x:Name="Root" Orientation="Horizontal" VerticalAlignment="Top">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="FocusStates">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition GeneratedDuration="0:0:0.35">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <QuinticEase EasingMode="EaseOut"/>
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="Rest"/>
+                <VisualState x:Name="Selected">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="Box" Storyboard.TargetProperty="Width" To="148" Duration="0:0:0.35" EnableDependentAnimation="True">
+                            <DoubleAnimation.EasingFunction><QuinticEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation Storyboard.TargetName="Box" Storyboard.TargetProperty="Height" To="148" Duration="0:0:0.35" EnableDependentAnimation="True">
+                            <DoubleAnimation.EasingFunction><QuinticEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation Storyboard.TargetName="Ring" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25"/>
+                        <DoubleAnimation Storyboard.TargetName="NameLabel" Storyboard.TargetProperty="MaxWidth" To="320" Duration="0:0:0.35" EnableDependentAnimation="True">
+                            <DoubleAnimation.EasingFunction><QuinticEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation Storyboard.TargetName="NameLabel" Storyboard.TargetProperty="Opacity" To="1" BeginTime="0:0:0.1" Duration="0:0:0.3"/>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Button x:Name="Body" Padding="0" UseSystemFocusVisuals="False" VerticalAlignment="Top"
+                AutomationProperties.Name="{x:Bind Tile.Text, Mode=OneWay}"
+                Click="OnBodyClick" RightTapped="OnBodyRightTapped" GotFocus="OnBodyGotFocus" LostFocus="OnBodyLostFocus">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter Content="{TemplateBinding Content}" AutomationProperties.AccessibilityView="Raw"/>
+                </ControlTemplate>
+            </Button.Template>
+            <Grid x:Name="Box" Width="96" Height="96">
+                <!-- The tile: its colour, then its picture (fitted, never cropped), else its logo, else its glyph -->
+                <Border CornerRadius="16" Background="{x:Bind Tile.TintBrush, Mode=OneWay}"/>
+                <Border CornerRadius="16" Background="#59000000"/>
+                <Border CornerRadius="16" Margin="6" Visibility="{x:Bind Tile.HasCardImage, Mode=OneWay}">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{x:Bind Tile.CardImage, Mode=OneWay}" Stretch="Uniform"/>
+                    </Border.Background>
+                </Border>
+                <Viewbox Margin="22" Visibility="{x:Bind Tile.ShowLogoOnTile, Mode=OneWay}">
+                    <Grid Width="64" Height="64">
+                        <Image Source="{x:Bind Tile.Logo, Mode=OneWay}" Stretch="Uniform" Visibility="{x:Bind Tile.HasLogo, Mode=OneWay}"/>
+                        <FontIcon Glyph="{x:Bind Tile.Glyph}" FontSize="44" Foreground="White" Visibility="{x:Bind Tile.ShowGlyph, Mode=OneWay}"/>
+                    </Grid>
+                </Viewbox>
+                <Border CornerRadius="16" BorderBrush="#26FFFFFF" BorderThickness="1"/>
+                <!-- The console's white outline on the tile in focus -->
+                <Border x:Name="Ring" Opacity="0" Margin="-6" CornerRadius="21" BorderBrush="White" BorderThickness="3"/>
+            </Grid>
+        </Button>
+        <TextBlock x:Name="NameLabel" Text="{x:Bind Tile.Text, Mode=OneWay}" MaxWidth="0" Opacity="0" Margin="18,0,8,6"
+                   VerticalAlignment="Bottom" FontSize="22" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxLines="1" Foreground="White"/>
+    </StackPanel>
+</UserControl>

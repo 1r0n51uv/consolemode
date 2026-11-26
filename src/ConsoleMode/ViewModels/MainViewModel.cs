@@ -320,6 +320,7 @@ public partial class MainViewModel : ObservableObject
             HomeButtonShortPress = config.HomeButtonShortPress;
             AutoStartOnController = config.AutoStartOnController;
             InterfaceSounds = config.InterfaceSounds;
+            HomeMusic = config.HomeMusic;
             IntroAnimation = config.IntroAnimation;
             IntroSound = config.IntroSound;
             SelectedIntroStyle = IntroStyleOption(config.IntroAnimation ? config.IntroStyle : BootIntro.NoOpening);
@@ -509,7 +510,11 @@ public partial class MainViewModel : ObservableObject
     }
 
     // Every setting saves as soon as it changes; there is no Save button.
-    partial void OnSelectedAudioChanged(ComboOption? value) => SettingChanged();
+    partial void OnSelectedAudioChanged(ComboOption? value)
+    {
+        OnPropertyChanged(nameof(HasAudioChoice));
+        SettingChanged();
+    }
     partial void OnSelectedLanguageChanged(ComboOption? value)
     {
         if (_applying || value is null) return;
@@ -855,6 +860,7 @@ public partial class MainViewModel : ObservableObject
             HomeButtonShortPress = HomeButtonShortPress,
             AutoStartOnController = AutoStartOnController,
             InterfaceSounds = InterfaceSounds,
+            HomeMusic = HomeMusic,
             IntroAnimation = IntroAnimation,
             IntroSound = IntroSound,
             IntroStyle = IntroStyleToSave,

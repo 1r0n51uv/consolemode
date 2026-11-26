@@ -108,6 +108,9 @@ public sealed class AppConfig
     /// <summary>Sounds for moving, picking and going back in the console interface.</summary>
     public bool InterfaceSounds { get; set; } = true;
 
+    /// <summary>A soft console-style tune under Home (AmbientMusic).</summary>
+    public bool HomeMusic { get; set; } = true;
+
     /// <summary>The opening with the logo and a loading bar when the app opens (BootIntro).</summary>
     public bool IntroAnimation { get; set; } = true;
 

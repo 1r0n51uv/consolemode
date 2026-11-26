@@ -20,6 +20,7 @@ public partial class MainViewModel
     [ObservableProperty] private bool _homeButtonShortPress;
     [ObservableProperty] private bool _autoStartOnController;
     [ObservableProperty] private bool _interfaceSounds = true;
+    [ObservableProperty] private bool _homeMusic = true;
     [ObservableProperty] private bool _restoreDesktopIcons = true;
     [ObservableProperty] private bool _hideDesktopIcons;
     [ObservableProperty] private bool _parkPointer = true;
@@ -95,6 +96,8 @@ public partial class MainViewModel
     }
 
     partial void OnAutoStartOnControllerChanged(bool value) => SaveQuietly();
+
+    partial void OnHomeMusicChanged(bool value) => SaveQuietly();
 
     partial void OnInterfaceSoundsChanged(bool value)
     {

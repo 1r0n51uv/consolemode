@@ -47,6 +47,7 @@ public partial class MainViewModel
         OnPropertyChanged(nameof(AmbientFade));
         OnPropertyChanged(nameof(AmbientBackground));
         OnPropertyChanged(nameof(HasAmbientBackground));
+        OnPropertyChanged(nameof(HeroTile));
     }
 
     /// <summary>Loads the pictures of every launcher card and works out its colour.</summary>

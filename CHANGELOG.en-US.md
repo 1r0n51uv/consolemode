@@ -4,6 +4,12 @@ English (US) release notes, mirroring CHANGELOG.md (Brazilian Portuguese). Befor
 
 ## [Unreleased]
 
+## [1.7.1.5]
+### What's new
+- **Home, rewritten like a console's:** the row of games at the top, small tiles with the one in focus bigger, outlined and named; the page shows that game big, with its background filling the screen, its logo (its card picture) or name, what changes as icons, **Play** and **⋯**. Settings, the controller's battery and the clock sit at the top right. Fewer words, more icons, and the controller hints only show in Settings.
+- Smooth everywhere: the background cross-fades and drifts slowly, the logo and buttons slide in when you move, the tiles grow and shrink with an easing.
+- **Music on Home:** a soft console-style tune, made by the app, plays while you are on Home and fades out when you play or leave the window. System → App → Music on Home turns it off.
+
 ## [1.7.1.4]
 ### Changes
 - Cards open and close more gently: the pointer has to rest on a card a moment before it opens and be gone a moment before it closes, and the movement is slower and smoother.
