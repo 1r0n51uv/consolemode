@@ -363,15 +363,10 @@ public partial class MainViewModel : ObservableObject
 
         var ordered = loaded.OrderBy(m => ParseLeft(m.Info.LeftTop)).ThenBy(m => m.Info.WindowsDisplayNumber).ToList();
 
-        var focus = ordered.FirstOrDefault(m => m.Info.Matches(config.FocusMonitor))?.Info;
-        var firstRun = string.IsNullOrWhiteSpace(config.FocusMonitor);
-        if (focus is null)
-        {
-            // Typical setup: the game screen is the one that stays off while working.
-            focus = ordered.FirstOrDefault(m => !m.Info.IsActive)?.Info
-                    ?? ordered.FirstOrDefault(m => m.Info.IsPrimary)?.Info
+        // Console mode does not move, switch off or retune any screen: it opens on the one that is the main one now.
+        var focus = ordered.FirstOrDefault(m => m.Info.IsPrimary && m.Info.IsActive)?.Info
+                    ?? ordered.FirstOrDefault(m => m.Info.IsActive)?.Info
                     ?? ordered[0].Info;
-        }
 
         foreach (var (monitor, monitorModes) in ordered)
         {
@@ -382,16 +377,7 @@ public partial class MainViewModel : ObservableObject
             modes.AddRange(monitorModes);
 
             var selected = modes[0];
-            if (config.MonitorModes.TryGetValue(monitor.StableId, out var saved) ||
-                config.MonitorModes.TryGetValue(monitor.Name, out saved))
-            {
-                selected = modes.FirstOrDefault(m => m.Key == saved.Key) ?? modes[0];
-            }
-
-            MonitorRole role;
-            if (ReferenceEquals(monitor, focus)) role = MonitorRole.Focus;
-            else if (firstRun || config.HideMonitors.Any(monitor.Matches)) role = MonitorRole.Hide;
-            else role = MonitorRole.Keep;
+            var role = ReferenceEquals(monitor, focus) ? MonitorRole.Focus : MonitorRole.Keep;
 
             var row = new MonitorRowViewModel(monitor, role, selected, modes, OnRoleChanged, OnMonitorSelected);
             row.PropertyChanged += OnRowPropertyChanged;
@@ -627,8 +613,9 @@ public partial class MainViewModel : ObservableObject
 
         // Safety net: a game screen/mode never seen working must be confirmed on the TV,
         // otherwise the desk screens come back by themselves.
+        // No screen is changed any more, so there is nothing to confirm on the TV.
         var setup = config.SetupKey;
-        Func<ScreenRect?, bool>? confirm = config.ConfirmedSetup == setup ? null : ConfirmOnGameScreen;
+        Func<ScreenRect?, bool>? confirm = null;
         var rolledBack = false;
         try
         {

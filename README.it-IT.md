@@ -39,8 +39,7 @@ Le scorciatoie del controller le scegli tu: all'inizio non ce n'è nessuna attiv
 
 ## Funzioni
 
-- Nasconde gli altri schermi **scollegandoli**, o con **schermate nere**, tutto con le API di Windows: non include nessuno strumento di terze parti per schermo o audio
-- **Risoluzione e frequenza di aggiornamento** per schermo, **HDR**, e **VRR** mentre giochi
+- **HDR** e **VRR** mentre giochi
 - L'audio va alla TV (o a qualsiasi uscita) e poi torna com'era
 - Nasconde le **icone del desktop** durante la sessione, se attivi l'opzione, e ripristina la visibilità precedente quando torni al PC
 - Apre **Playnite a schermo intero** o un'app tua

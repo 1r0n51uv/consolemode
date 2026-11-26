@@ -69,6 +69,12 @@ public partial class MainViewModel
     /// <summary>The line under the launcher name: audio, FPS, HDR, VRR (the launcher itself is the title).</summary>
     [ObservableProperty] private string _homeMetaText = "";
 
+    /// <summary>The same without the leading separator: audio, HDR, VRR, under the name of the open card.</summary>
+    [ObservableProperty] private string _homeMetaLine = "";
+
+    /// <summary>A card of the dock is open: the background blurs and dims behind it.</summary>
+    [ObservableProperty] private bool _isDockOpen;
+
     private void RebuildLaunchTiles()
     {
         LaunchTiles.Clear();
@@ -242,6 +248,7 @@ public partial class MainViewModel
         // SummaryItems starts with the launcher, which is already the title. The resolution comes
         // before this text in the view, so every item here is led by its separator.
         HomeMetaText = string.Concat(SummaryItems.Skip(1).Select(item => "  ·  " + item));
+        HomeMetaLine = string.Join("  ·  ", SummaryItems.Skip(1));
     }
 
     /// <summary>The selected launcher's colour, faint, for the glow over the background; and the same colour fully clear.</summary>

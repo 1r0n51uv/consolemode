@@ -4,6 +4,13 @@ Notas em português do Brasil; a versão em inglês (Estados Unidos) fica em `CH
 
 ## [Unreleased]
 
+## [1.7.1.4]
+### Mudanças
+- Os blocos abrem e fecham com mais calma: o ponteiro precisa parar um instante no bloco para ele abrir e sair um instante antes de ele fechar, e o movimento ficou mais lento e suave.
+- O ícone do bloco só aparece com ele aberto, e menor; a imagem agora cabe dentro do bloco em vez de ser cortada. O bloco aberto desfoca e escurece o fundo atrás do texto, e o fundo todo escurece um pouco enquanto um bloco está aberto.
+- O modo console não mexe mais nas telas: os ajustes de "Tela de jogo" acabaram (o mapa das telas, a resolução e como apagar as outras). Ele abre na tela principal, sem mover, apagar nem confirmar nada na TV.
+- Em "Ao entrar no modo console" não há mais a escolha do aplicativo a abrir: cada bloco abre o seu. Os ajustes de argumentos e de processo a acompanhar foram junto.
+
 ## [1.7.1.3]
 ### Novidades
 - **Um Início novo:** um dock de blocos de vidro na parte de baixo. O bloco com o foco ou o ponteiro se abre e mostra onde você vai jogar, o que muda e o botão Jogar; os outros ficam pequenos. O último bloco, Ajustes, abre todos os ajustes, e as telas foram para lá (Tela de jogo). A barra de cima e a página Sessão acabaram.

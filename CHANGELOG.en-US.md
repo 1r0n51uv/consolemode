@@ -4,6 +4,13 @@ English (US) release notes, mirroring CHANGELOG.md (Brazilian Portuguese). Befor
 
 ## [Unreleased]
 
+## [1.7.1.4]
+### Changes
+- Cards open and close more gently: the pointer has to rest on a card a moment before it opens and be gone a moment before it closes, and the movement is slower and smoother.
+- A card's icon shows only while it is open, and smaller; its picture now fits inside the card instead of being cropped. An open card blurs and darkens the background behind its text, and the whole background dims a little while a card is open.
+- Console mode no longer touches the screens: the "Gaming display" settings are gone (the screens map, resolution and how to turn the others off). It opens on the main screen, with nothing moved, switched off or confirmed on the TV.
+- In "When entering console mode" there is no choice of app to open any more: each card opens its own app. The app's arguments and process to watch settings went with it.
+
 ## [1.7.1.3]
 ### What's new
 - **A new Home:** a dock of glass cards at the bottom. The card with the focus or the pointer opens up to show where you will play, what changes and Play; the others stay small. The last card, Settings, opens every setting, and the displays moved there (Gaming display). The top bar and the Session page are gone.
