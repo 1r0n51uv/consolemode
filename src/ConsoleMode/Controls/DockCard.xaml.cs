@@ -19,8 +19,15 @@ public sealed partial class DockCard : UserControl
 
     private static readonly Windows.UI.ViewManagement.UISettings Ui = new();
 
+    // The pointer has to rest a moment before the card opens, and has to be gone a moment before it closes, so
+    // sweeping across the dock does not make every card open and shut. The focus acts at once.
+    private static readonly TimeSpan PointerOpenDelay = TimeSpan.FromMilliseconds(140);
+    private static readonly TimeSpan CloseDelay = TimeSpan.FromMilliseconds(320);
+
     private bool _focused;
     private bool _pointerOver;
+    private bool _open;
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _timer;
 
     public DockCard()
     {
@@ -55,34 +62,59 @@ public sealed partial class DockCard : UserControl
     private void OnBodyGotFocus(object sender, RoutedEventArgs e)
     {
         _focused = true;
-        Refresh();
+        Decide(immediate: true);
     }
 
     private void OnBodyLostFocus(object sender, RoutedEventArgs e)
     {
         _focused = false;
-        Refresh();
+        Decide(immediate: false);
     }
 
     private void OnBodyPointerEntered(object sender, PointerRoutedEventArgs e)
     {
         _pointerOver = true;
-        Refresh();
+        Decide(immediate: false);
     }
 
     private void OnBodyPointerExited(object sender, PointerRoutedEventArgs e)
     {
         _pointerOver = false;
-        Refresh();
+        Decide(immediate: false);
     }
 
-    /// <summary>The card just opened (focus or pointer): the view tints the background with its colour.</summary>
+    /// <summary>The card opened (focus or pointer): the view tints the background with its colour.</summary>
     public event EventHandler? Opened;
 
-    private void Refresh()
+    /// <summary>The card closed again.</summary>
+    public event EventHandler? Closed;
+
+    private void Decide(bool immediate)
     {
-        var open = _focused || _pointerOver;
+        _timer?.Stop();
+        var wanted = _focused || _pointerOver;
+        if (wanted == _open) return;
+        if (immediate || !Ui.AnimationsEnabled) { Apply(wanted); return; }
+        _timer ??= DispatcherQueue.CreateTimer();
+        _timer.IsRepeating = false;
+        _timer.Interval = wanted ? PointerOpenDelay : CloseDelay;
+        _timer.Tick -= OnTimer;
+        _timer.Tick += OnTimer;
+        _timer.Start();
+    }
+
+    private void OnTimer(Microsoft.UI.Dispatching.DispatcherQueueTimer sender, object args)
+    {
+        sender.Stop();
+        Apply(_focused || _pointerOver);
+    }
+
+    private void Apply(bool open)
+    {
+        if (open == _open) return;
+        _open = open;
         VisualStateManager.GoToState(this, open ? "Expanded" : "Compact", Ui.AnimationsEnabled);
         if (open) Opened?.Invoke(this, EventArgs.Empty);
+        else Closed?.Invoke(this, EventArgs.Empty);
     }
 }

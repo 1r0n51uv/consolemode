@@ -42,7 +42,7 @@ public class ConsoleTourTests
     public void The_shortcuts_stop_opens_the_controller_category()
     {
         Assert.Equal(2, ConsoleTour.Tab(ConsoleTourStop.Shortcuts));
-        Assert.Equal(2, ConsoleTour.SystemCategory(ConsoleTourStop.Shortcuts));
+        Assert.Equal(1, ConsoleTour.SystemCategory(ConsoleTourStop.Shortcuts));
         Assert.Equal(0, ConsoleTour.SystemCategory(ConsoleTourStop.System));
         Assert.Null(ConsoleTour.SystemCategory(ConsoleTourStop.Launchers));
     }
@@ -70,7 +70,6 @@ public class ConsoleTourTests
         var arguments = new Dictionary<ConsoleTourStop, int>
         {
             [ConsoleTourStop.Launchers] = 2,
-            [ConsoleTourStop.Screens] = 1,
             [ConsoleTourStop.System] = 1,
             [ConsoleTourStop.Done] = 2
         };

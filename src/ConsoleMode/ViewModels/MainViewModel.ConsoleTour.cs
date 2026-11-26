@@ -31,7 +31,6 @@ public partial class MainViewModel
     private object[] ConsoleTourArgs(ConsoleTourStop stop) => stop switch
     {
         ConsoleTourStop.Launchers => [HintConfirm, HintMenu],
-        ConsoleTourStop.Screens => [HintConfirm],
         ConsoleTourStop.System => [HintAlt],
         ConsoleTourStop.Done => [LocalizationService.Get("AppSection"), LocalizationService.Get("TutorialCard")],
         _ => []

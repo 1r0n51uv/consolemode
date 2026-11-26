@@ -7,8 +7,6 @@ public enum ConsoleTourStop
     Welcome,
     /// <summary>The dock of launchers on Home: what opens, and Play on each card.</summary>
     Launchers,
-    /// <summary>The screens in Settings: which one is the game screen and what happens to the others.</summary>
-    Screens,
     /// <summary>The categories on System: every setting.</summary>
     System,
     /// <summary>The controller shortcuts (System → Controller): Home button, session menu, back to the PC.</summary>
@@ -28,15 +26,15 @@ public static class ConsoleTour
     /// <summary>The page a stop is shown on: 0 Home, 2 System (the console tab indexes; 1, Session, is gone).</summary>
     public static int Tab(ConsoleTourStop stop) => stop switch
     {
-        ConsoleTourStop.Screens or ConsoleTourStop.System or ConsoleTourStop.Shortcuts => 2,
+        ConsoleTourStop.System or ConsoleTourStop.Shortcuts => 2,
         _ => 0
     };
 
     /// <summary>The System category a stop opens (the controller one for the shortcuts), or null to leave it as it is.</summary>
     public static int? SystemCategory(ConsoleTourStop stop) => stop switch
     {
-        ConsoleTourStop.Screens or ConsoleTourStop.System => 0,
-        ConsoleTourStop.Shortcuts => 2,
+        ConsoleTourStop.System => 0,
+        ConsoleTourStop.Shortcuts => 1,
         _ => null
     };
 

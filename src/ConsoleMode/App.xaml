@@ -87,6 +87,8 @@
                  diagonal sheen, and an edge that catches light: bright at the top-left, soft in the middle, a second
                  glint at the bottom-right. The focus lights the edge, sweeps a shine across and lifts the tile. -->
             <AcrylicBrush x:Key="GlassFill" TintColor="#0D141D" TintOpacity="0.42" TintLuminosityOpacity="0.6" FallbackColor="#E6131A24"/>
+            <!-- Deeper and darker: the strip under an open card's text, and the veil over the background while a card is open -->
+            <AcrylicBrush x:Key="GlassDeep" TintColor="#0A0F16" TintOpacity="0.62" TintLuminosityOpacity="0.8" FallbackColor="#F00D131B"/>
             <LinearGradientBrush x:Key="GlassSheen" StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Color="#33FFFFFF" Offset="0"/>
                 <GradientStop Color="#0DFFFFFF" Offset="0.38"/>

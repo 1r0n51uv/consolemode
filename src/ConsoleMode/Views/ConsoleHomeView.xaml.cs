@@ -434,8 +434,7 @@ public sealed partial class ConsoleHomeView : UserControl
         1 => SystemSection1,
         2 => SystemSection2,
         3 => SystemSection3,
-        4 => SystemSection4,
-        _ => SystemSection5
+        _ => SystemSection4
     };
 
     private void FocusSystemCategory()
@@ -782,7 +781,6 @@ public sealed partial class ConsoleHomeView : UserControl
         FrameworkElement[] parts = stop switch
         {
             ConsoleTourStop.Launchers => [DockScroll],
-            ConsoleTourStop.Screens => [ScreenCards],
             ConsoleTourStop.System => [CategoryRail],
             ConsoleTourStop.Shortcuts => [HomeShortcutRow, ExitShortcutRow],
             _ => []
@@ -817,7 +815,6 @@ public sealed partial class ConsoleHomeView : UserControl
 
     private FrameworkElement? TourTargetElement(ConsoleTourStop stop) => stop switch
     {
-        ConsoleTourStop.Screens => ScreenCards,
         ConsoleTourStop.Shortcuts => HomeShortcutRow,
         _ => null
     };
@@ -1070,8 +1067,20 @@ public sealed partial class ConsoleHomeView : UserControl
     /// <summary>A card opened (focus or pointer): its colour tints the background and the glass.</summary>
     private void OnLaunchTileOpened(object? sender, EventArgs e)
     {
-        if (sender is DockCard { Tile: { } tile }) ViewModel.AmbientTile = tile;
+        if (sender is not DockCard { Tile: { } tile } card) return;
+        _openCards.Add(card);
+        ViewModel.AmbientTile = tile;
+        ViewModel.IsDockOpen = true;
     }
+
+    /// <summary>A card closed: the background clears once no card is open (another may have opened meanwhile).</summary>
+    private void OnLaunchTileClosed(object? sender, EventArgs e)
+    {
+        if (sender is DockCard card) _openCards.Remove(card);
+        ViewModel.IsDockOpen = _openCards.Count > 0;
+    }
+
+    private readonly HashSet<DockCard> _openCards = [];
 
     /// <summary>Cards (not settings rows) grow when focused and shrink back when it leaves; the launchers grow more.</summary>
     private static void ScaleTile(object source, float scale)

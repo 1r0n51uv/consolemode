@@ -11,34 +11,35 @@
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="SizeStates">
                 <VisualStateGroup.Transitions>
-                    <VisualTransition GeneratedDuration="0:0:0.32">
+                    <VisualTransition GeneratedDuration="0:0:0.55">
                         <VisualTransition.GeneratedEasingFunction>
-                            <CubicEase EasingMode="EaseOut"/>
+                            <QuinticEase EasingMode="EaseInOut"/>
                         </VisualTransition.GeneratedEasingFunction>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>
                 <VisualState x:Name="Compact"/>
                 <VisualState x:Name="Expanded">
                     <Storyboard>
-                        <DoubleAnimation Storyboard.TargetName="Card" Storyboard.TargetProperty="Width" To="560" Duration="0:0:0.32" EnableDependentAnimation="True">
-                            <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                        <DoubleAnimation Storyboard.TargetName="Card" Storyboard.TargetProperty="Width" To="560" Duration="0:0:0.55" EnableDependentAnimation="True">
+                            <DoubleAnimation.EasingFunction><QuinticEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
-                        <DoubleAnimation Storyboard.TargetName="Card" Storyboard.TargetProperty="Height" To="320" Duration="0:0:0.32" EnableDependentAnimation="True">
-                            <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                        <DoubleAnimation Storyboard.TargetName="Card" Storyboard.TargetProperty="Height" To="320" Duration="0:0:0.55" EnableDependentAnimation="True">
+                            <DoubleAnimation.EasingFunction><QuinticEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
-                        <DoubleAnimation Storyboard.TargetName="Details" Storyboard.TargetProperty="Opacity" To="1" BeginTime="0:0:0.12" Duration="0:0:0.22"/>
-                        <DoubleAnimation Storyboard.TargetName="CompactLabel" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.12"/>
-                        <DoubleAnimation Storyboard.TargetName="Scrim" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3"/>
-                        <DoubleAnimation Storyboard.TargetName="EdgeFocus" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2"/>
-                        <DoubleAnimation Storyboard.TargetName="Glow" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3"/>
-                        <DoubleAnimation Storyboard.TargetName="ShineShift" Storyboard.TargetProperty="X" From="-1.4" To="1.4" Duration="0:0:0.9" EnableDependentAnimation="True">
+                        <DoubleAnimation Storyboard.TargetName="Details" Storyboard.TargetProperty="Opacity" To="1" BeginTime="0:0:0.2" Duration="0:0:0.4"/>
+                        <DoubleAnimation Storyboard.TargetName="IconBox" Storyboard.TargetProperty="Opacity" To="1" BeginTime="0:0:0.2" Duration="0:0:0.4"/>
+                        <DoubleAnimation Storyboard.TargetName="Caption" Storyboard.TargetProperty="Opacity" To="1" BeginTime="0:0:0.1" Duration="0:0:0.45"/>
+                        <DoubleAnimation Storyboard.TargetName="CompactLabel" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2"/>
+                        <DoubleAnimation Storyboard.TargetName="EdgeFocus" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.4"/>
+                        <DoubleAnimation Storyboard.TargetName="Glow" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.5"/>
+                        <DoubleAnimation Storyboard.TargetName="ShineShift" Storyboard.TargetProperty="X" From="-1.4" To="1.4" Duration="0:0:1.2" EnableDependentAnimation="True">
                             <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Shine" Storyboard.TargetProperty="Opacity" Duration="0:0:0.9">
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Shine" Storyboard.TargetProperty="Opacity" Duration="0:0:1.2">
                             <LinearDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
-                            <LinearDoubleKeyFrame KeyTime="0:0:0.15" Value="1"/>
-                            <LinearDoubleKeyFrame KeyTime="0:0:0.75" Value="1"/>
-                            <LinearDoubleKeyFrame KeyTime="0:0:0.9" Value="0"/>
+                            <LinearDoubleKeyFrame KeyTime="0:0:0.25" Value="1"/>
+                            <LinearDoubleKeyFrame KeyTime="0:0:0.95" Value="1"/>
+                            <LinearDoubleKeyFrame KeyTime="0:0:1.2" Value="0"/>
                         </DoubleAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -62,17 +63,11 @@
                 <!-- The card's own picture (a brush, so it follows the rounded corners) -->
                 <Border CornerRadius="36" Visibility="{x:Bind Tile.HasCardImage, Mode=OneWay}">
                     <Border.Background>
-                        <ImageBrush ImageSource="{x:Bind Tile.CardImage, Mode=OneWay}" Stretch="UniformToFill"/>
+                        <ImageBrush ImageSource="{x:Bind Tile.CardImage, Mode=OneWay}" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
                     </Border.Background>
                 </Border>
-                <Border x:Name="Scrim" CornerRadius="36" Opacity="0.55">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#00000000" Offset="0.2"/>
-                            <GradientStop Color="#B3000000" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                </Border>
+                <!-- Under the text of an open card: the background behind it blurs and darkens, so the words read over any picture -->
+                <Border x:Name="Caption" Opacity="0" VerticalAlignment="Bottom" Height="190" CornerRadius="0,0,36,36" Background="{StaticResource GlassDeep}"/>
                 <Border Background="{StaticResource GlassSheen}" CornerRadius="36" IsHitTestVisible="False"/>
                 <Border x:Name="Shine" Opacity="0" CornerRadius="36" IsHitTestVisible="False">
                     <Border.Background>
@@ -90,13 +85,14 @@
                 <Border x:Name="EdgeFocus" Opacity="0" BorderBrush="{StaticResource GlassEdgeFocused}" BorderThickness="2.5" CornerRadius="36" IsHitTestVisible="False"/>
                 <Border x:Name="Glow" Opacity="0" Margin="-7" BorderBrush="#2EFFFFFF" BorderThickness="6" CornerRadius="42" IsHitTestVisible="False"/>
 
-                <!-- Always there: the logo (or the glyph) at the top-left, the name at the bottom while the card is small -->
-                <Grid Margin="26">
-                    <Image Source="{x:Bind Tile.Logo, Mode=OneWay}" Width="76" Height="76" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top"
-                           Visibility="{x:Bind Tile.HasLogo, Mode=OneWay}"/>
-                    <FontIcon Glyph="{x:Bind Tile.Glyph}" FontSize="52" HorizontalAlignment="Left" VerticalAlignment="Top"
-                              Visibility="{x:Bind Tile.ShowGlyph, Mode=OneWay}"/>
-                    <TextBlock x:Name="CompactLabel" Text="{x:Bind Tile.Text, Mode=OneWay}" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Bottom"
+                <!-- The name while the card is small; the icon only once it is open, and smaller -->
+                <Grid Margin="28">
+                    <Grid x:Name="IconBox" Opacity="0" Width="52" Height="52" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Image Source="{x:Bind Tile.Logo, Mode=OneWay}" Stretch="Uniform" Visibility="{x:Bind Tile.HasLogo, Mode=OneWay}"/>
+                        <FontIcon Glyph="{x:Bind Tile.Glyph}" FontSize="38" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  Visibility="{x:Bind Tile.ShowGlyph, Mode=OneWay}"/>
+                    </Grid>
+                    <TextBlock x:Name="CompactLabel" Text="{x:Bind Tile.Text, Mode=OneWay}" FontSize="19" FontWeight="SemiBold" VerticalAlignment="Bottom"
                                TextTrimming="CharacterEllipsis" MaxLines="1" Foreground="#F2FFFFFF"/>
                 </Grid>
 
@@ -105,12 +101,8 @@
                     <TextBlock Text="{x:Bind Tile.Text, Mode=OneWay}" FontSize="38" FontWeight="Bold" CharacterSpacing="-20" TextTrimming="CharacterEllipsis" MaxLines="1"/>
                     <TextBlock Text="{x:Bind Tile.Info, Mode=OneWay}" FontSize="18" Foreground="#E6FFFFFF" TextWrapping="Wrap" MaxLines="3"
                                Visibility="{x:Bind Tile.HasInfo, Mode=OneWay}"/>
-                    <StackPanel Spacing="4" Visibility="{x:Bind Tile.IsLauncher, Mode=OneWay}">
-                        <TextBlock Text="{x:Bind Host.SummaryTitle, Mode=OneWay}" FontSize="19" Foreground="#E6FFFFFF" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"/>
-                        <TextBlock FontSize="16" Foreground="#B3FFFFFF" TextTrimming="CharacterEllipsis" MaxLines="1">
-                            <Run Text="{x:Bind Host.FocusRow.SelectedMode.Text, Mode=OneWay}"/><Run Text="{x:Bind Host.HomeMetaText, Mode=OneWay}"/>
-                        </TextBlock>
-                    </StackPanel>
+                    <TextBlock Text="{x:Bind Host.HomeMetaLine, Mode=OneWay}" FontSize="17" Foreground="#CCFFFFFF" TextTrimming="CharacterEllipsis" MaxLines="1"
+                               Visibility="{x:Bind Tile.IsLauncher, Mode=OneWay}"/>
                     <Border Margin="0,10,0,0" HorizontalAlignment="Left" CornerRadius="26" Padding="28,12" Background="{x:Bind Tile.AccentBrush, Mode=OneWay}"
                             BorderBrush="{StaticResource GlassEdgeFocused}" BorderThickness="1.2">
                         <StackPanel Orientation="Horizontal" Spacing="12">
