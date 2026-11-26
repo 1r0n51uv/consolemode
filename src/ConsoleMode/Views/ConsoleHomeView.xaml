@@ -117,9 +117,14 @@
             </Grid>
             <Image Source="{x:Bind ViewModel.BackgroundCustomImage, Mode=OneWay}" Stretch="UniformToFill" Opacity="0.7"
                    Visibility="{x:Bind ViewModel.ShowBackgroundCustom, Mode=OneWay}"/>
-            <!-- The background of the card in focus, over the usual one (fades in and out) -->
-            <Image Source="{x:Bind ViewModel.AmbientBackground, Mode=OneWay}" Stretch="UniformToFill" IsHitTestVisible="False"
-                   Opacity="{x:Bind ViewModel.ShownOpacity(ViewModel.HasAmbientBackground), Mode=OneWay}" OpacityTransition="{StaticResource ConsoleFade}"/>
+            <!-- The background of the game in focus, over the usual one: two layers cross-fade when it changes (and the one in
+                 front drifts slowly, like a console's) -->
+            <Image x:Name="HeroBgA" Stretch="UniformToFill" Opacity="0" IsHitTestVisible="False">
+                <Image.OpacityTransition><ScalarTransition Duration="0:0:0.8"/></Image.OpacityTransition>
+            </Image>
+            <Image x:Name="HeroBgB" Stretch="UniformToFill" Opacity="0" IsHitTestVisible="False">
+                <Image.OpacityTransition><ScalarTransition Duration="0:0:0.8"/></Image.OpacityTransition>
+            </Image>
             <!-- The selected launcher tints the background like the cover of a game on a console home -->
             <Rectangle IsHitTestVisible="False">
                 <Rectangle.Fill>
@@ -148,9 +153,6 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <!-- While a card of the dock is open the background blurs and dims behind it -->
-            <Border Background="{StaticResource GlassDeep}" IsHitTestVisible="False"
-                    Opacity="{x:Bind ViewModel.ShownOpacity(ViewModel.IsDockOpen), Mode=OneWay}" OpacityTransition="{StaticResource ConsoleFade}"/>
             <!-- System tab: the art dims much more, so the rows of options stay readable over any cover or picture -->
             <Rectangle Fill="#D207090D" Opacity="{x:Bind ViewModel.ShownOpacity(ViewModel.IsConsoleSettingsOpen), Mode=OneWay}"
                        OpacityTransition="{StaticResource ConsoleFade}"/>
@@ -165,18 +167,40 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Clock and controller battery: all that is left of the top bar -->
-            <Border Grid.Row="0" Style="{StaticResource GlassCapsule}" Padding="26,8" CornerRadius="28" Height="56" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
-                    <FontIcon Glyph="&#xE7FC;" FontSize="22" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            <!-- The top: the row of games on the left, like a console's, and on the right settings, the controller's battery and the clock -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ScrollViewer x:Name="DockScroll" Visibility="{x:Bind ViewModel.IsHomeTab, Mode=OneWay}" Height="172" Padding="10,10,10,0"
+                              HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl x:Name="LaunchRow" ItemsSource="{x:Bind ViewModel.LaunchTiles, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="16"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:LaunchTile">
+                                <controls:HomeTile Tile="{x:Bind}" Invoked="OnLaunchTileInvoked" MenuRequested="OnLaunchTileMenuRequested" Selected="OnLaunchTileSelected"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="22" VerticalAlignment="Top" Margin="24,20,4,0">
+                    <Button x:Name="SettingsButton" Style="{StaticResource HomeIconButton}" Command="{x:Bind ViewModel.OpenFullSettingsCommand}"
+                            AutomationProperties.Name="{x:Bind ViewModel.Texts.Settings, Mode=OneWay}">
+                        <FontIcon Glyph="&#xE713;" FontSize="24"/>
+                    </Button>
                     <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.HasControllerBattery, Mode=OneWay}"
-                                AutomationProperties.Name="{x:Bind ViewModel.ControllerBatteryLabel, Mode=OneWay}">
-                        <FontIcon Glyph="{x:Bind ViewModel.ControllerBatteryGlyph, Mode=OneWay}" FontSize="20" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="{x:Bind ViewModel.ControllerBatteryText, Mode=OneWay}" FontSize="18" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                    </StackPanel>
-                    <TextBlock x:Name="ClockText" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    AutomationProperties.Name="{x:Bind ViewModel.ControllerBatteryLabel, Mode=OneWay}">
+                            <FontIcon Glyph="{x:Bind ViewModel.ControllerBatteryGlyph, Mode=OneWay}" FontSize="20" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{x:Bind ViewModel.ControllerBatteryText, Mode=OneWay}" FontSize="18" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+                    <TextBlock x:Name="ClockText" FontSize="26" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White"/>
                 </StackPanel>
-                </Border>
+            </Grid>
 
             <!-- Status banner -->
             <Border Grid.Row="1" Visibility="{x:Bind ViewModel.IsStatusOpen, Mode=OneWay}" CornerRadius="12" Padding="20,14"
@@ -217,25 +241,43 @@
 
             <!-- Pages: one per tab -->
             <Grid Grid.Row="2">
-                <!-- Home: the dock. Cards sit low and small; the one with the focus or the pointer opens up (Play, where, what changes). -->
+                <!-- Home: the game in focus, big, like a console's: its logo (its card picture) or its name, what changes as icons, Play and ⋯ -->
                 <Grid x:Name="HomePanel" Visibility="{x:Bind ViewModel.IsHomeTab, Mode=OneWay}">
-                    <ScrollViewer x:Name="DockScroll" VerticalAlignment="Bottom" Height="372" Margin="0,0,0,8"
-                                  HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Hidden"
-                                  VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
-                        <ItemsControl x:Name="LaunchRow" ItemsSource="{x:Bind ViewModel.LaunchTiles, Mode=OneWay}" VerticalAlignment="Bottom" Margin="8,0,8,0" HorizontalAlignment="Left">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" Spacing="22" VerticalAlignment="Bottom"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="vm:LaunchTile">
-                                    <controls:DockCard Tile="{x:Bind}" Host="{Binding ViewModel, ElementName=Page}"
-                                                       Invoked="OnLaunchTileInvoked" MenuRequested="OnLaunchTileMenuRequested" Opened="OnLaunchTileOpened" Closed="OnLaunchTileClosed"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
+                    <StackPanel x:Name="Hero" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="14,0,0,24" Spacing="22" MaxWidth="760">
+                        <Grid MinHeight="110">
+                            <Image Source="{x:Bind ViewModel.HeroTile.CardImage, Mode=OneWay}" MaxHeight="230" MaxWidth="580" Stretch="Uniform"
+                                   HorizontalAlignment="Left" VerticalAlignment="Bottom" Visibility="{x:Bind ViewModel.HeroTile.HasCardImage, Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind ViewModel.HeroTile.Text, Mode=OneWay}" FontSize="76" FontWeight="Bold" CharacterSpacing="-30" Foreground="White"
+                                       TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" VerticalAlignment="Bottom"
+                                       Visibility="{x:Bind ViewModel.HeroTile.ShowTitleText, Mode=OneWay}"/>
+                        </Grid>
+                        <!-- What changes for the session, as icons -->
+                        <StackPanel Orientation="Horizontal" Spacing="10" Visibility="{x:Bind ViewModel.HeroTile.IsLauncher, Mode=OneWay}">
+                            <Border CornerRadius="16" Padding="14,7" Background="#33000000" BorderBrush="#33FFFFFF" BorderThickness="1"
+                                    Visibility="{x:Bind ViewModel.HasAudioChoice, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind ViewModel.SelectedAudio.Text, Mode=OneWay}">
+                                <FontIcon Glyph="&#xE767;" FontSize="18" Foreground="White"/>
+                            </Border>
+                            <Border CornerRadius="16" Padding="14,6" Background="#33000000" BorderBrush="#33FFFFFF" BorderThickness="1" Visibility="{x:Bind ViewModel.HdrEnable, Mode=OneWay}">
+                                <TextBlock Text="HDR" FontSize="15" FontWeight="Bold" Foreground="White"/>
+                            </Border>
+                            <Border CornerRadius="16" Padding="14,6" Background="#33000000" BorderBrush="#33FFFFFF" BorderThickness="1" Visibility="{x:Bind ViewModel.VrrEnable, Mode=OneWay}">
+                                <TextBlock Text="VRR" FontSize="15" FontWeight="Bold" Foreground="White"/>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,8,0,0">
+                            <Button x:Name="PlayButton" Style="{StaticResource HomePlayButton}" Command="{x:Bind ViewModel.PlayHeroCommand}"
+                                    AutomationProperties.Name="{x:Bind ViewModel.HeroTile.ActionText, Mode=OneWay}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon Glyph="{x:Bind ViewModel.HeroTile.ActionGlyph, Mode=OneWay}" FontSize="20"/>
+                                    <TextBlock Text="{x:Bind ViewModel.HeroTile.ActionText, Mode=OneWay}" FontSize="22" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="HeroMenuButton" Style="{StaticResource HomeRoundButton}" Command="{x:Bind ViewModel.OpenHeroMenuCommand}"
+                                    Visibility="{x:Bind ViewModel.HeroTile.IsLauncher, Mode=OneWay}" AutomationProperties.Name="{x:Bind ViewModel.HeroTile.Text, Mode=OneWay}">
+                                <FontIcon Glyph="&#xE712;" FontSize="22"/>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
                 </Grid>
 
                 <!-- System tab: every setting, as rows -->
@@ -431,6 +473,12 @@
                                                 <TextBlock Grid.Column="1" Style="{StaticResource RowValue}" Text="{x:Bind ViewModel.OnOff(ViewModel.InterfaceSounds), Mode=OneWay}"/>
                                             </Grid>
                                         </Button>
+                                        <Button Style="{StaticResource ConsoleRow}" Command="{x:Bind ViewModel.CycleSettingCommand}" CommandParameter="homemusic" AutomationProperties.HelpText="{x:Bind ViewModel.Texts.HomeMusicDescription, Mode=OneWay}">
+                                            <Grid ColumnSpacing="24"><Grid.ColumnDefinitions><ColumnDefinition Width="3*"/><ColumnDefinition Width="2*"/></Grid.ColumnDefinitions>
+                                                <TextBlock Style="{StaticResource RowLabel}" Text="{x:Bind ViewModel.Texts.HomeMusicCard, Mode=OneWay}"/>
+                                                <TextBlock Grid.Column="1" Style="{StaticResource RowValue}" Text="{x:Bind ViewModel.OnOff(ViewModel.HomeMusic), Mode=OneWay}"/>
+                                            </Grid>
+                                        </Button>
                                         <Button Style="{StaticResource ConsoleRow}" Command="{x:Bind ViewModel.OpenPickerCommand}" CommandParameter="introstyle" AutomationProperties.HelpText="{x:Bind ViewModel.Texts.IntroStyleDescription, Mode=OneWay}">
                                             <Grid ColumnSpacing="24"><Grid.ColumnDefinitions><ColumnDefinition Width="3*"/><ColumnDefinition Width="2*"/></Grid.ColumnDefinitions>
                                                 <TextBlock Style="{StaticResource RowLabel}" Text="{x:Bind ViewModel.Texts.IntroStyleCard, Mode=OneWay}"/>
@@ -549,7 +597,7 @@
             </Grid>
 
             <!-- The controller hints; LB / RB already sit by the tabs at the top -->
-            <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="22" HorizontalAlignment="Right" Opacity="0.8">
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="22" HorizontalAlignment="Right" Opacity="0.8" Visibility="{x:Bind ViewModel.IsConsoleSettingsOpen, Mode=OneWay}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Border Style="{StaticResource HintBadge}"><TextBlock Text="{x:Bind ViewModel.HintConfirm, Mode=OneWay}" FontWeight="Bold" VerticalAlignment="Center"/></Border>
                         <TextBlock Text="{x:Bind ViewModel.Texts.HintSelect, Mode=OneWay}" VerticalAlignment="Center" FontSize="16"/>

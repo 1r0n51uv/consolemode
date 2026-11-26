@@ -73,6 +73,73 @@ public sealed partial class ConsoleHomeView : UserControl
         ViewModel.PickBackgroundImageRequested += () => _ = PickBackgroundImageAsync();
     }
 
+    // ───────────── Home: the game in focus ─────────────
+
+    private bool _heroBgAInFront;
+
+    /// <summary>The music plays on Home only: window in front, no session, not during the opening, and turned on.</summary>
+    private void UpdateMusic() =>
+        HomeMusic.Set(ViewModel.HomeMusic && _windowActive && !ViewModel.IsConsoleActive && !ViewModel.IsIntroShowing, DispatcherQueue);
+
+    /// <summary>Another game in focus: its background cross-fades in and its logo and buttons slide in.</summary>
+    private void ShowHero()
+    {
+        ShowHeroBackground(ViewModel.AmbientBackground);
+        if (!Ui.AnimationsEnabled) return;
+        try
+        {
+            ElementCompositionPreview.SetIsTranslationEnabled(Hero, true);
+            var visual = ElementCompositionPreview.GetElementVisual(Hero);
+            var compositor = visual.Compositor;
+            var easing = compositor.CreateCubicBezierEasingFunction(new Vector2(0.16f, 1f), new Vector2(0.3f, 1f));
+            var slide = compositor.CreateScalarKeyFrameAnimation();
+            slide.InsertKeyFrame(0f, 36f);
+            slide.InsertKeyFrame(1f, 0f, easing);
+            slide.Duration = TimeSpan.FromMilliseconds(520);
+            visual.StartAnimation("Translation.X", slide);
+            var fade = compositor.CreateScalarKeyFrameAnimation();
+            fade.InsertKeyFrame(0f, 0f);
+            fade.InsertKeyFrame(1f, 1f, easing);
+            fade.Duration = TimeSpan.FromMilliseconds(420);
+            visual.StartAnimation("Opacity", fade);
+        }
+        catch (Exception ex) { AppLog.Write($"Início: animação: {ex.Message}"); }
+    }
+
+    /// <summary>Two layers take turns: the new picture fades in over the old one, which fades out; none shows the usual background.</summary>
+    private void ShowHeroBackground(ImageSource? source)
+    {
+        var front = _heroBgAInFront ? HeroBgA : HeroBgB;
+        var back = _heroBgAInFront ? HeroBgB : HeroBgA;
+        if (source is null) { front.Opacity = 0; back.Opacity = 0; return; }
+        if (ReferenceEquals(front.Source, source) && front.Opacity > 0) return;
+        back.Source = source;
+        back.Opacity = 1;
+        front.Opacity = 0;
+        _heroBgAInFront = !_heroBgAInFront;
+        Drift(back);
+    }
+
+    /// <summary>The picture in front drifts very slowly (a little zoom), like a console's game background.</summary>
+    private static void Drift(UIElement layer)
+    {
+        if (!Ui.AnimationsEnabled) return;
+        try
+        {
+            var visual = ElementCompositionPreview.GetElementVisual(layer);
+            var size = layer.ActualSize;
+            visual.CenterPoint = new Vector3(size.X * 0.6f, size.Y * 0.4f, 0);
+            var zoom = visual.Compositor.CreateVector3KeyFrameAnimation();
+            zoom.InsertKeyFrame(0f, new Vector3(1.0f, 1.0f, 1));
+            zoom.InsertKeyFrame(0.5f, new Vector3(1.06f, 1.06f, 1));
+            zoom.InsertKeyFrame(1f, new Vector3(1.0f, 1.0f, 1));
+            zoom.Duration = TimeSpan.FromSeconds(40);
+            zoom.IterationBehavior = Microsoft.UI.Composition.AnimationIterationBehavior.Forever;
+            visual.StartAnimation("Scale", zoom);
+        }
+        catch (Exception ex) { AppLog.Write($"Início: fundo: {ex.Message}"); }
+    }
+
     /// <summary>A picture for a card or its background, from the file picker.</summary>
     private async Task PickLaunchImageAsync(LaunchTile tile, string kind)
     {
@@ -158,16 +225,28 @@ public sealed partial class ConsoleHomeView : UserControl
                 // Back from another window: the tour's stop gets its full time again, bar and all.
                 if (_windowActive && !wasActive && ViewModel.IsConsoleTourOpen) StartTourCountdown();
                 RefreshNavigator();
+                UpdateMusic();
             };
         RefreshNavigator();
         StartClock();
         FocusDefault();
+        UpdateMusic();
     }
 
     private void OnViewModelChanged(object? sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
+            case nameof(MainViewModel.HeroTile):
+                ShowHero();
+                break;
+            case nameof(MainViewModel.AmbientBackground):
+                ShowHeroBackground(ViewModel.AmbientBackground);
+                break;
+            case nameof(MainViewModel.HomeMusic):
+            case nameof(MainViewModel.IsIntroShowing) when !ViewModel.IsIntroShowing:
+                UpdateMusic();
+                break;
             case nameof(MainViewModel.GlassMaterial):
             case nameof(MainViewModel.AmbientColor):
                 ApplyCardMaterial(ViewModel.GlassMaterial, ViewModel.AmbientColor);
@@ -177,6 +256,7 @@ public sealed partial class ConsoleHomeView : UserControl
                 _rowsEdges.Snap();
                 break;
             case nameof(MainViewModel.IsConsoleActive):
+                UpdateMusic();
                 RefreshNavigator();
                 DispatcherQueue.TryEnqueue(FocusDefault);
                 break;
@@ -302,7 +382,7 @@ public sealed partial class ConsoleHomeView : UserControl
         if (index < 0) index = 0;
         return LaunchRow.ContainerFromIndex(index) is DependencyObject container
                && Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(container) > 0
-               && Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(container, 0) is DockCard card
+               && Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(container, 0) is HomeTile card
                && card.BodyButton.Focus(FocusState.Keyboard);
     }
 
@@ -1049,38 +1129,31 @@ public sealed partial class ConsoleHomeView : UserControl
         Root.XamlRoot is { } root && FocusManager.GetFocusedElement(root) is Button { DataContext: LaunchTile tile } button && IsInside(button, LaunchRow)
             ? tile : null;
 
-    /// <summary>A right click on a card: its menu (its pictures, Remove from Home). The launcher that opens doesn't change.</summary>
+    /// <summary>A right click on a tile: its menu (its pictures, Remove from Home).</summary>
     private void OnLaunchTileMenuRequested(object sender, RightTappedRoutedEventArgs e)
     {
-        if (sender is not DockCard { Tile: { } tile } || IsOverlayOpen() || !MainViewModel.HasTileMenu(tile)) return;
+        if (sender is not HomeTile { Tile: { } tile } || IsOverlayOpen() || !MainViewModel.HasTileMenu(tile)) return;
         e.Handled = true;
         ViewModel.OpenTileMenu(tile);
     }
 
-    /// <summary>A, Enter or a click on a card: Play on a launcher, add an app on "+", every setting on Settings.</summary>
+    /// <summary>A or Enter on a tile, or a click on the selected one: Play (Add on "+").</summary>
     private void OnLaunchTileInvoked(object sender, RoutedEventArgs e)
     {
-        if (sender is not DockCard { Tile: { } tile } || IsOverlayOpen()) return;
+        if (sender is not HomeTile { Tile: { } tile } || IsOverlayOpen()) return;
         ViewModel.ChooseLaunchTileCommand.Execute(tile);
     }
 
-    /// <summary>A card opened (focus or pointer): its colour tints the background and the glass.</summary>
-    private void OnLaunchTileOpened(object? sender, EventArgs e)
+    /// <summary>A tile took the focus: the page shows its game, and down from the row goes to its Play.</summary>
+    private void OnLaunchTileSelected(object? sender, EventArgs e)
     {
-        if (sender is not DockCard { Tile: { } tile } card) return;
-        _openCards.Add(card);
+        if (sender is not HomeTile { Tile: { } tile } card) return;
+        card.BodyButton.XYFocusDown = PlayButton;
+        PlayButton.XYFocusUp = card.BodyButton;
+        HeroMenuButton.XYFocusUp = card.BodyButton;
+        card.StartBringIntoView(new BringIntoViewOptions { AnimationDesired = true, HorizontalAlignmentRatio = 0.3 });
         ViewModel.AmbientTile = tile;
-        ViewModel.IsDockOpen = true;
     }
-
-    /// <summary>A card closed: the background clears once no card is open (another may have opened meanwhile).</summary>
-    private void OnLaunchTileClosed(object? sender, EventArgs e)
-    {
-        if (sender is DockCard card) _openCards.Remove(card);
-        ViewModel.IsDockOpen = _openCards.Count > 0;
-    }
-
-    private readonly HashSet<DockCard> _openCards = [];
 
     /// <summary>Cards (not settings rows) grow when focused and shrink back when it leaves; the launchers grow more.</summary>
     private static void ScaleTile(object source, float scale)

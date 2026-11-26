@@ -37,8 +37,12 @@ public sealed partial class LaunchTile : ObservableObject
     [ObservableProperty] private string _actionText = "";
     public string ActionGlyph => IsSettings ? "\uE713" : IsAdd ? "\uE710" : "\uE768";
     /// <summary>The card's own picture; null shows the glass tinted with its colour.</summary>
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasCardImage))] private ImageSource? _cardImage;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasCardImage), nameof(ShowTitleText), nameof(ShowLogoOnTile))] private ImageSource? _cardImage;
     public bool HasCardImage => CardImage is not null;
+    /// <summary>Without a card picture, Home shows the name big where the logo would go.</summary>
+    public bool ShowTitleText => CardImage is null;
+    /// <summary>The tile shows its picture when it has one, else its logo or glyph.</summary>
+    public bool ShowLogoOnTile => CardImage is null;
     /// <summary>A background for the whole screen while this card is the one in focus; null keeps the usual background.</summary>
     [ObservableProperty] private ImageSource? _backgroundImage;
     /// <summary>The card's colour: from its background or card picture when it has one, else the launcher's own.</summary>
@@ -72,8 +76,19 @@ public partial class MainViewModel
     /// <summary>The same without the leading separator: audio, HDR, VRR, under the name of the open card.</summary>
     [ObservableProperty] private string _homeMetaLine = "";
 
-    /// <summary>A card of the dock is open: the background blurs and dims behind it.</summary>
-    [ObservableProperty] private bool _isDockOpen;
+    /// <summary>The game shown big on Home: the tile with the focus, else the one picked last, else the first.</summary>
+    public LaunchTile? HeroTile => AmbientTile ?? LaunchTiles.FirstOrDefault(t => t.IsSelected) ?? LaunchTiles.FirstOrDefault();
+
+    /// <summary>Play (or Add, on "+") on the game shown big.</summary>
+    [RelayCommand]
+    private Task PlayHero() => ChooseLaunchTile(HeroTile);
+
+    /// <summary>⋯ next to Play: the menu of the game shown big (its pictures, Remove from Home).</summary>
+    [RelayCommand]
+    private void OpenHeroMenu() => OpenTileMenu(HeroTile);
+
+    /// <summary>An audio output is set for the session: Home shows its icon.</summary>
+    public bool HasAudioChoice => !string.IsNullOrEmpty(SelectedAudio?.Value);
 
     private void RebuildLaunchTiles()
     {
@@ -101,16 +116,6 @@ public partial class MainViewModel
             Info = LocalizationService.Get("AddCustomAppDescription"),
             ActionText = LocalizationService.Get("AddCustomAppCard"),
             IsAdd = true
-        });
-        LaunchTiles.Add(new LaunchTile
-        {
-            Option = new ComboOption { Text = LocalizationService.Get("Settings"), Value = "settings" },
-            Glyph = "\uE713",
-            Background = TileGradient(0xFF3A4250, 0xFF1A1E25),
-            Accent = Argb(0xFF3A4250),
-            Info = LocalizationService.Get("SettingsTileInfo"),
-            ActionText = LocalizationService.Get("Settings"),
-            IsSettings = true
         });
         foreach (var tile in LaunchTiles.Where(t => t.IsLauncher)) _ = LoadLaunchLogoAsync(tile);
         AmbientTile = null;

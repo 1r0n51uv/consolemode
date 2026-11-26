@@ -4,6 +4,12 @@ Notas em português do Brasil; a versão em inglês (Estados Unidos) fica em `CH
 
 ## [Unreleased]
 
+## [1.7.1.5]
+### Novidades
+- **O Início, reescrito como o de um console:** a fileira de jogos no topo, blocos pequenos com o que está em foco maior, contornado e com o nome; a página mostra esse jogo em destaque, com o fundo dele na tela toda, o logo (a imagem do bloco) ou o nome, o que muda em ícones, **Jogar** e **⋯**. Ajustes, a bateria do controle e o relógio ficam no canto superior direito. Menos texto, mais ícones, e as dicas do controle só aparecem nos Ajustes.
+- Tudo mais suave: o fundo troca com um esmaecimento e se move devagar, o logo e os botões deslizam ao mudar de jogo, os blocos crescem e encolhem com suavidade.
+- **Música no Início:** uma música suave no estilo dos consoles, feita pelo próprio app, toca enquanto você está no Início e some quando você joga ou sai da janela. Sistema → App → Música no Início desliga.
+
 ## [1.7.1.4]
 ### Mudanças
 - Os blocos abrem e fecham com mais calma: o ponteiro precisa parar um instante no bloco para ele abrir e sair um instante antes de ele fechar, e o movimento ficou mais lento e suave.

@@ -207,6 +207,8 @@ public sealed class LocalizedStrings : INotifyPropertyChanged
     public string SwitcherCloseConfirmAction => LocalizationService.Get(nameof(SwitcherCloseConfirmAction));
     public string ShortcutCancel => LocalizationService.Get(nameof(ShortcutCancel));
     public string BackgroundCard => LocalizationService.Get(nameof(BackgroundCard));
+    public string HomeMusicCard => LocalizationService.Get(nameof(HomeMusicCard));
+    public string HomeMusicDescription => LocalizationService.Get(nameof(HomeMusicDescription));
     public string CardMaterialCard => LocalizationService.Get(nameof(CardMaterialCard));
     public string CardMaterialDescription => LocalizationService.Get(nameof(CardMaterialDescription));
     public string BackgroundDescription => LocalizationService.Get(nameof(BackgroundDescription));
