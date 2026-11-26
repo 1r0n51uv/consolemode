@@ -42,7 +42,7 @@ public sealed partial class HomeTile : UserControl
     public event RightTappedEventHandler? MenuRequested;
 
     /// <summary>The tile took the focus: the page shows it.</summary>
-    public event EventHandler? Selected;
+    public event EventHandler? TileSelected;
 
     private void OnBodyClick(object sender, RoutedEventArgs e)
     {
@@ -57,7 +57,7 @@ public sealed partial class HomeTile : UserControl
     {
         _focused = true;
         VisualStateManager.GoToState(this, "Selected", Ui.AnimationsEnabled);
-        Selected?.Invoke(this, EventArgs.Empty);
+        TileSelected?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnBodyLostFocus(object sender, RoutedEventArgs e)
