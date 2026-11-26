@@ -42,8 +42,7 @@ You pick the controller shortcuts yourself: none is on at first, the tour the ap
 
 ## Features
 
-- Hide the other screens by **disconnecting** them, or **black overlays**, all with Windows' own APIs: no third-party display or audio tool is bundled
-- Per-screen **resolution and refresh rate**, **HDR**, and **VRR** while you play
+- **HDR** and **VRR** while you play
 - Audio goes to the TV (or any output) and comes back afterwards
 - Hides the **desktop icons** during a session if you enable the option and restores their previous visibility when you return to the PC
 - Launches **Playnite fullscreen** or an app of your own

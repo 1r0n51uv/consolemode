@@ -31,7 +31,7 @@ O Console Mode tem uma interface só, feita como a de um console: ocupa a tela t
 
 O **Início** é um dock de blocos de vidro na parte de baixo: os seus iniciadores (o Playnite e os aplicativos que você adicionou com o **+**) e depois os **Ajustes**. O bloco com o foco ou o ponteiro se abre e mostra onde você vai jogar e o que muda (áudio, resolução, HDR, VRR); **A**, Enter ou um clique nele joga. Num iniciador, **☰** (OPTIONS no PlayStation) ou o botão direito abre o menu: **Imagem do bloco**, **Imagem de fundo**, **Remover as imagens** e, nos aplicativos que você adicionou, **Remover do Início**. O vidro, o brilho atrás dos blocos e o botão Jogar usam as cores dessas imagens.
 
-Os **Ajustes** (o último bloco) listam as categorias à esquerda (Tela de jogo, com as telas deste PC; Ao entrar no modo console; Controle; Extras opcionais; App; Atalho, ajuda e dados). Passar por uma categoria mostra as opções dela à direita; **A** ou a direita entra nelas, e **B** ou a esquerda volta para as categorias; **B** nas categorias volta ao Início.
+Os **Ajustes** (o último bloco) listam as categorias à esquerda (Ao entrar no modo console; Controle; Extras opcionais; App; Atalho, ajuda e dados). Passar por uma categoria mostra as opções dela à direita; **A** ou a direita entra nelas, e **B** ou a esquerda volta para as categorias; **B** nas categorias volta ao Início.
 
 Em **Sistema → Controle**, escolha o layout dos botões: **Automático**, **Xbox** ou **PlayStation**. A prévia e os nomes dos atalhos acompanham a escolha, que fica salva ao fechar o app. Isso muda os símbolos exibidos; as entradas do controle mantêm o mapeamento existente.
 

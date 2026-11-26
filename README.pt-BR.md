@@ -42,8 +42,7 @@ Os atalhos do controle são você quem escolhe: nenhum vem ligado, o tour da pri
 
 ## Recursos
 
-- Esconde as outras telas **desconectando**, ou com **cortinas pretas**, tudo pelas APIs do próprio Windows: nenhuma ferramenta de terceiros para telas ou áudio vem embutida
-- **Resolução e Hz** por tela, **HDR**, e **VRR** enquanto você joga
+- **HDR** e **VRR** enquanto você joga
 - O áudio vai para a TV (ou qualquer saída) e volta depois
 - Oculta os **ícones da área de trabalho** durante a sessão se você ativar a opção e restaura a visibilidade anterior ao voltar ao PC
 - Abre o **Playnite em tela cheia** ou um aplicativo seu

@@ -31,7 +31,7 @@ Console Mode has one interface, made like a console's: it fills the screen and w
 
 **Home** is a dock of glass cards at the bottom: your launchers (Playnite and the apps you added with **+**), then **Settings**. The card with the focus or the pointer opens up to show where you will play and what changes (audio, resolution, HDR, VRR); **A**, Enter or a click on it plays. On a launcher, **☰** (OPTIONS on PlayStation) or a right click opens its menu: **Card picture**, **Background picture**, **Remove the pictures** and, for apps you added, **Remove from Home**. The glass, the glow behind the cards and the Play pill take their colours from those pictures.
 
-**Settings** (the last card, or the button on the controller you set for it) lists its categories on the left (Gaming display, with the screens of this PC; When entering console mode; Controller; Optional extras; App; Shortcut, help, and data). Moving over a category shows its options on the right; **A** or right goes into them, and **B** or left goes back to the categories; **B** on the categories returns to Home.
+**Settings** (the last card, or the button on the controller you set for it) lists its categories on the left (When entering console mode; Controller; Optional extras; App; Shortcut, help, and data). Moving over a category shows its options on the right; **A** or right goes into them, and **B** or left goes back to the categories; **B** on the categories returns to Home.
 
 In **System → Controller**, choose the button layout: **Automatic**, **Xbox** or **PlayStation**. The preview and shortcut labels follow the choice, which is saved when you close the app. This changes the displayed symbols; the controller's inputs keep their existing mapping.
 
